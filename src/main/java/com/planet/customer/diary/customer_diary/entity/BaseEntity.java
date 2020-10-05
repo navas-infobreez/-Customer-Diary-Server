@@ -8,16 +8,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.hibernate.annotations.GenericGenerator;
 
 @MappedSuperclass
-public class BaseEntity implements Serializable {
+public class BaseEntity  implements Serializable{
 
 	private static final long serialVersionUID = -6269370713562848990L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
-	@GenericGenerator(name = "native", strategy = "native")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false, updatable = false)
 	private Long id;
 

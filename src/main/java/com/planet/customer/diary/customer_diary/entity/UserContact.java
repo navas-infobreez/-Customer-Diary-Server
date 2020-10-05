@@ -8,9 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "TBL_USER_CONTACT")
+@Table(name = "TBL_USER_CONTACT",
+uniqueConstraints = @UniqueConstraint(name = "unique_user_contact", columnNames = "USER_ID"))
 public class UserContact extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -410289978826615196L;
@@ -24,6 +26,19 @@ public class UserContact extends BaseEntity implements Serializable {
 
 	@Column(name = "PHONE_NUMBER")
 	private Long phoneNumber;
+	
+	@Column(name = "COUNTRY")
+	private String country;
+	
+	@Column(name = "CITY")
+	private String city;
+	
+	@Column(name = "ADDRESS1")
+	private String address1;
+	
+	@Column(name = "ADDRESS2")
+	private String address2;
+	
 
 	public UserContact() {
 
@@ -66,6 +81,38 @@ public class UserContact extends BaseEntity implements Serializable {
 		this.user = user;
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getAddress1() {
+		return address1;
+	}
+
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+
+	public String getAddress2() {
+		return address2;
+	}
+
+	public void setAddress2(String address2) {
+		this.address2 = address2;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -81,7 +128,7 @@ public class UserContact extends BaseEntity implements Serializable {
 		if (this == obj) {
 			return true;
 		}
-		if (!super.equals(obj)) {
+		if (super.equals(obj)) {
 			return false;
 		}
 		if (getClass() != obj.getClass()) {

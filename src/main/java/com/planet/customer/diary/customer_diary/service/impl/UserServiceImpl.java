@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,10 +21,12 @@ import com.planet.customer.diary.customer_diary.entity.UserRole;
 import com.planet.customer.diary.customer_diary.model.dto.UserDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.UserRepository;
+import com.planet.customer.diary.customer_diary.service.UserContactService;
+import com.planet.customer.diary.customer_diary.service.UserRoleMapService;
 import com.planet.customer.diary.customer_diary.service.UserService;
 
 @Service(value = "userService")
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserServiceImpl extends BasicServiceImpl implements UserDetailsService, UserService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -36,6 +37,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired
 	@Qualifier("genericRepository")
 	private GenericRepository genericRepository;
+	
+	@Autowired
+	private UserContactService userContactService;
+	
+	@Autowired
+	private UserRoleMapService userRoleMapService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -63,10 +70,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		UserDTO tempUserDTO = new UserDTO();
 		if (user != null) {
 			tempUserDTO = modelMapper.map(user, tempUserDTO.getClass());
-			final String password = user.getPassword();
-//			if(password != null) {
-//				tempUserDTO.setPassword(password.);
-//			}
+			tempUserDTO.setPassword(null);
 			tempUserDTO.mapUserContact(user);
 			tempUserDTO.mapUserRoles(user);
 		}
@@ -74,16 +78,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	private User mapDTOToUserEntity(final UserDTO userDTO) {
-		User user = new User();
-		if (userDTO != null) {
-			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			user = modelMapper.map(userDTO, user.getClass());
+		User user = null;	
+		if(userDTO.getId() != null && userDTO.getId() > 0) {
+			user = genericRepository.findById(User.class, userDTO.getId());
+			user.setFirstName(userDTO.getFirstName());
+			user.setLastName(userDTO.getLastName());
+			user.setUserName(userDTO.getUserName());
+		}else {
+			user = new User();
+			user = (User) mapDTOToEntity(userDTO, user);
 			final String password = userDTO.getPassword();
 			if(password != null) 
 				user.setPassword(passwordEncoder.encode(password));
-			user.setUserContact(userDTO.getUserContact(userDTO.getUserContact()));
-			user.setUserRoleMaps(userDTO.getUserRoles(user, userDTO.getRoles()));
-		}
+		}					
+		user.setUserContact(userContactService.mapUserContactDTOToEntity(userDTO.getUserContact(),user));	
+		user.setUserRoleMaps(userRoleMapService.mapUserRoleMapDTOToEntity(userDTO.getRoles(), user));
 		return user;
 	}
 
@@ -112,9 +121,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDTO createOrUpdateUser(final UserDTO userDTO) {
 		if(userDTO == null)
 			throw new NullPointerException("No data found user information");
-		User user = null;
 		if(userDTO.getId() != null && userDTO.getId() > 0) {
-			//user = findById(userDTO.getId());
 			genericRepository.saveOrUpdate(mapDTOToUserEntity(userDTO));
 		}else {
 			final Serializable userId = genericRepository.save(mapDTOToUserEntity(userDTO));

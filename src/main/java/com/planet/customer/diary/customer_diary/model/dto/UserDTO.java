@@ -111,21 +111,18 @@ public class UserDTO extends BaseDTO {
 		}
 		this.setRoles(tempRoles);
 	}
-
-	public UserContact getUserContact(final UserContactDTO userContactDTO) {
-		return userContactDTO != null ? new UserContact(userContactDTO.getId(), userContactDTO.getEmail(), userContactDTO.getPhoneNumber()): null;
-	}
-
-	public List<UserRoleMap> getUserRoles(final User user, final List<UserRoleDTO> roles) {
-		final List<UserRoleMap> tempRoles = new ArrayList<>();
-		for (final UserRoleDTO userRoleDTO : roles) {
-			final UserRoleMap userRoleMap = new UserRoleMap();
-			userRoleMap.setUser(user);
-			userRoleMap.setUserRole(new UserRole(userRoleDTO.getId(), userRoleDTO.getName(),
-					userRoleDTO.getDescription(), userRoleDTO.getPriority(), userRoleDTO.getActive()));
-		}
-		return tempRoles;
-	}
+	
+//	public List<UserRoleMap> getUserRoles(final User user, final List<UserRoleDTO> roles) {
+//		final List<UserRoleMap> tempRoles = new ArrayList<>();
+//		for (final UserRoleDTO userRoleDTO : roles) {
+//			final UserRoleMap userRoleMap = new UserRoleMap();
+//			userRoleMap.setUser(user);
+//			userRoleMap.setUserRole(new UserRole(userRoleDTO.getId(), userRoleDTO.getName(),
+//					userRoleDTO.getDescription(), userRoleDTO.getPriority(), userRoleDTO.getActive()));
+//			tempRoles.add(userRoleMap);
+//		}
+//		return tempRoles;
+//	}
 
 	public String getPassword() {
 		return password;

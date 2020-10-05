@@ -7,12 +7,14 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name = "TBL_USER_ROLE_MAP")
+@Table(name = "TBL_USER_ROLE_MAP", 
+uniqueConstraints = @UniqueConstraint(name = "unique_map_usert_Role", columnNames = {"USER_ID","USER_ROLE_ID"}))
 public class UserRoleMap extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6218925434804285435L;
