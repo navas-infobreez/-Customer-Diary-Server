@@ -79,7 +79,7 @@ public class UserRoleServiceImpl extends BasicServiceImpl implements UserRoleSer
 	
 	@Override
 	@Transactional(readOnly = true)
-	public UserRoleDTO findByUserId(final Long id) {
+	public UserRoleDTO findByRoleId(final Long id) {
 		final UserRole userRole =  findById(id);
 		return mapUserEntityToDTO(userRole);
 	}

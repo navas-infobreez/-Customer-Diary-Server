@@ -10,7 +10,7 @@ public interface UserRoleService {
 
 	List<UserRoleDTO> findAll();
 
-	UserRoleDTO findByUserId(Long id);
+	UserRoleDTO findByRoleId(Long id);
 
 	void delete(Long id);
 
