@@ -2,8 +2,6 @@ package com.planet.customer.diary.customer_diary.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +13,6 @@ import com.planet.customer.diary.customer_diary.model.dto.UserRoleDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.UserRoleMapRepository;
 import com.planet.customer.diary.customer_diary.service.UserRoleMapService;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Service
 public class UserRoleMapServiceImpl extends BasicServiceImpl implements UserRoleMapService {

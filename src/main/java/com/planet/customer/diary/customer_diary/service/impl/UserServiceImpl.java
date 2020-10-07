@@ -80,7 +80,7 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 	private User mapDTOToUserEntity(final UserDTO userDTO) {
 		User user = null;	
 		if(userDTO.getId() != null && userDTO.getId() > 0) {
-			user = genericRepository.findById(User.class, userDTO.getId());
+			user = findById(userDTO.getId());
 			user.setFirstName(userDTO.getFirstName());
 			user.setLastName(userDTO.getLastName());
 			user.setUserName(userDTO.getUserName());
@@ -132,15 +132,7 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 		return userDTO;
 	}
 
-//	@Override
-//	@Transactional
-//	public UserDTO save(final UserDTO userDTO) {
-//		if (userDTO != null) {
-//			final Serializable userId = genericRepository.save(mapDTOToUserEntity(userDTO));
-//			userDTO.setId((Long) userId);
-//		}
-//		return userDTO;
-//	}
+
 
 	@Override
 	@Transactional//(readOnly = true)
@@ -155,7 +147,7 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 	@Override
 	@Transactional(readOnly = true)
 	public UserDTO findByUserId(final Long id) {
-		final User user = genericRepository.findById(User.class, id);
+		final User user =  findById(id);
 		return mapUserEntityToDTO(user);
 	}
 

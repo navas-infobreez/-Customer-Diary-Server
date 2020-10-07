@@ -1,12 +1,9 @@
 package com.planet.customer.diary.customer_diary.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,9 +23,6 @@ public class UserRole extends BaseEntity implements Serializable {
 
 	@Column(name = "ACTIVE")
 	private Boolean active;
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<UserRoleMap> userRoleMaps;
 
 	public UserRole(final Long id, final String name, final String description, final Integer priority,
 			final Boolean active) {
@@ -76,14 +70,6 @@ public class UserRole extends BaseEntity implements Serializable {
 
 	public Boolean isActive() {
 		return Boolean.TRUE.equals(this.active);
-	}
-
-	public List<UserRoleMap> getUserRoleMaps() {
-		return userRoleMaps;
-	}
-
-	public void setUserRoleMaps(final List<UserRoleMap> userRoleMaps) {
-		this.userRoleMaps = userRoleMaps;
 	}
 
 	@Override
