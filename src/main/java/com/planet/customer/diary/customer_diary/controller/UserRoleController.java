@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ public class UserRoleController {
 	@Autowired
 	private UserRoleService userRoleService;
 
-	@PostMapping(value = "getuserrole")
+	@GetMapping(value = "getuserrole")
 	public ResponseDTO<UserRoleDTO> getUserRole(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		final UserRoleDTO userRole = userRoleService.findByRoleId(id);
@@ -31,7 +32,7 @@ public class UserRoleController {
 				userRole);
 	}
 	
-	@PostMapping(value = "deleteuserrole")
+	@GetMapping(value = "deleteuserrole")
 	public ResponseDTO<UserRoleDTO> deleteUser(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		userRoleService.delete(id);
@@ -39,7 +40,7 @@ public class UserRoleController {
 				null);
 	}
 		
-	@PostMapping(value = "getalluserrole")
+	@GetMapping(value = "getalluserrole")
 	public ResponseDTO<List<UserRoleDTO>> getAllUserDetails(){
 		final List<UserRoleDTO> usersRole = userRoleService.findAll();
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the all user details",
