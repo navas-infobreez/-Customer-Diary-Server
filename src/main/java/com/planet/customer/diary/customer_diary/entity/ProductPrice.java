@@ -47,6 +47,46 @@ public class ProductPrice extends BaseEntity implements Serializable {
 	public ProductPrice() {
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public UOM getUom() {
+		return uom;
+	}
+
+	public void setUom(UOM uom) {
+		this.uom = uom;
+	}
+
+	public double getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(double purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
+
+	public double getSalesPrice() {
+		return salesPrice;
+	}
+
+	public void setSalesPrice(double salesPrice) {
+		this.salesPrice = salesPrice;
+	}
+
+	public double getDiscntSalesPrice() {
+		return discntSalesPrice;
+	}
+
+	public void setDiscntSalesPrice(double discntSalesPrice) {
+		this.discntSalesPrice = discntSalesPrice;
+	}
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();

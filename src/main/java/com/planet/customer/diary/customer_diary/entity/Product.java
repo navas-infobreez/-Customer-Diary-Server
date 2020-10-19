@@ -1,12 +1,15 @@
 package com.planet.customer.diary.customer_diary.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -29,8 +32,11 @@ public class Product extends BaseEntity implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 	
-	@Column(name = "IS_ACTIVE")
-	private boolean isActive;
+	@Column(name = "ACTIVE")
+	private boolean active;
+
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProductPrice> productPriceList;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PRODUCT_CATEGORY_ID", nullable = false)
@@ -85,11 +91,19 @@ public class Product extends BaseEntity implements Serializable {
 	}
 
 	public boolean isActive() {
-		return isActive;
+		return active;
 	}
 
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public List<ProductPrice> getProductPriceList() {
+		return productPriceList;
+	}
+
+	public void setProductPriceList(List<ProductPrice> productPriceList) {
+		this.productPriceList = productPriceList;
 	}
 
 	@Override
@@ -135,7 +149,7 @@ public class Product extends BaseEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Product [name=" + name + ", seachkey=" + searchKey + ", ProductCategory=" + productCategory.getId()
+		return "Product [name=" + name + ", seachkey=" + searchKey + ", ProductCategory=" + productCategory.getName()
 				+ ", description=" + description + ", id" + super.getId() + "]";
 	}
 

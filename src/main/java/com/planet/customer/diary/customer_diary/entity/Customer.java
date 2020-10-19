@@ -130,7 +130,7 @@ public class Customer extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Customer [firstName=" + firstName + ", lastName=" + lastName + ", searchKey=" + searchKey + ", customerContact="
-				+ customerContact + "]";
+				+ customerContact.getContactNo() + "]";
 	}
 
 }
