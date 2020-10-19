@@ -8,8 +8,9 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Customer;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDTO;
@@ -18,6 +19,8 @@ import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerService;
 
 @Service(value = "customerService")
+@Transactional
+@EnableTransactionManagement
 public class CustomerServiceImpl extends BasicServiceImpl implements CustomerService{
 
 	@Autowired
@@ -73,6 +76,7 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<CustomerDTO> findAll() {
 		final List<Customer> customer = genericRepository.findAll(Customer.class);
 		return mapCustomerEntitiesToDTOs(customer);
@@ -80,6 +84,7 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 	
 	
 	@Override
+	@Transactional
 	public CustomerDTO createOrUpdateCustomer(CustomerDTO customerDTO) {
 		if(customerDTO == null)
 			throw new NullPointerException("No data found customer information");
@@ -93,12 +98,14 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public CustomerDTO findByCustomerId(Long id) {
 		final Customer customer =  findById(id);
 		return mapCustomerEntityToDTO(customer);
 	}
 
 	@Override
+	@Transactional
 	public void delete(Long id) {
 		final Customer customer = findById(id);
 		if (customer != null) {
@@ -108,6 +115,7 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 
 
 	@Override
+	@Transactional
 	public CustomerDTO findBySearchKey(String customerSearchKey) {
 		final Customer customer = customerRepository.findBySearchKey(customerSearchKey);
 		if (customer == null) {
