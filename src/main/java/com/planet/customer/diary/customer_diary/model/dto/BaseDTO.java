@@ -21,6 +21,8 @@ public class BaseDTO {
 	}
 
 	public void setId(Long id) {
+		if (id <= 0)
+			this.id = null;
 		this.id = id;
 	}
 	

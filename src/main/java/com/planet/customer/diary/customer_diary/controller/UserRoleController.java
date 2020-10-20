@@ -33,7 +33,7 @@ public class UserRoleController {
 	}
 	
 	@GetMapping(value = "deleteuserrole")
-	public ResponseDTO<UserRoleDTO> deleteUser(@RequestParam String pid) {
+	public ResponseDTO<UserRoleDTO> deleteUserRole(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		userRoleService.delete(id);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully deleted user details",
@@ -41,14 +41,14 @@ public class UserRoleController {
 	}
 		
 	@GetMapping(value = "getalluserrole")
-	public ResponseDTO<List<UserRoleDTO>> getAllUserDetails(){
+	public ResponseDTO<List<UserRoleDTO>> getAllUserRoleDetails() {
 		final List<UserRoleDTO> usersRole = userRoleService.findAll();
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the all user details",
 				usersRole);
 	}
 	
 	@PostMapping(value = "createorupdateuserrole")
-	public ResponseDTO<UserRoleDTO> createOrUpdateUser(@RequestBody final UserRoleDTO userRoleDTO){
+	public ResponseDTO<UserRoleDTO> createOrUpdateUserRole(@RequestBody final UserRoleDTO userRoleDTO) {
 		final UserRoleDTO userRole = userRoleService.createOrUpdateUserRole(userRoleDTO);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully updated the user details",
 				userRole);

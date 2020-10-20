@@ -13,7 +13,7 @@ public interface UomService {
 
 	public UomDTO createOrUpdateUom(UomDTO uomDTO);
 	
-	public UomDTO mapUomDTOToEntity(UomDTO uomDTO, UOM uom);
+	public UOM mapUomDTOToEntity(UomDTO uomDTO, UOM uom);
 
 	public void delete(Long id);
 	
