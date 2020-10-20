@@ -89,7 +89,7 @@ public class User extends BaseEntity implements Serializable {
 	}
 
 	public void setUserRoleMaps(final List<UserRoleMap> userRoleMaps) {
-		if (userRoleMaps != null) {
+	  if (userRoleMaps != null) {
 			if (this.userRoleMaps != null) {
 				this.userRoleMaps.clear();
 			}
