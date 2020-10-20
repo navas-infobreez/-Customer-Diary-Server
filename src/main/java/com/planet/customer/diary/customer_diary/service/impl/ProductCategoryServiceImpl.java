@@ -16,10 +16,9 @@ public class ProductCategoryServiceImpl extends BasicServiceImpl implements Prod
 
 	@Autowired
 	private GenericRepository genericRepository;
-	
-	
-	
+
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductCategoryDTO> findAll() {
 		return mapProductCategoryEntitiesToDTOs(genericRepository.findAll(ProductCategory.class));
 	}

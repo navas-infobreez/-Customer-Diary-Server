@@ -14,7 +14,7 @@ import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.UserRoleMapRepository;
 import com.planet.customer.diary.customer_diary.service.UserRoleMapService;
 
-@Service
+@Service(value = "userRoleMapService")
 public class UserRoleMapServiceImpl extends BasicServiceImpl implements UserRoleMapService {
 
 	@Autowired

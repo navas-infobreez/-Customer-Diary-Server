@@ -9,14 +9,19 @@ import org.springframework.stereotype.Service;
 import com.planet.customer.diary.customer_diary.entity.Product;
 import com.planet.customer.diary.customer_diary.entity.ProductPrice;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
+import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.ProductPriceService;
+import com.planet.customer.diary.customer_diary.service.UomService;
 
-@Service
+@Service(value = "productPriceService")
 public class ProductPriceServiceImpl extends BasicServiceImpl implements ProductPriceService {
 
 	@Autowired
 	private GenericRepository genericRepository;
+
+	@Autowired
+	private UomService uomService;
 
 	@Override
 	public List<ProductPrice> mapProductPriceDTOToEntity(final List<ProductPriceDTO> productPriceDTOList,
@@ -34,7 +39,9 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 			productPriceprice.setPurchasePrice(productPriceDTO.getPurchasePrice());
 			productPriceprice.setSalesPrice(productPriceDTO.getSalesPrice());
 			productPriceprice.setDiscntSalesPrice(productPriceDTO.getDiscntSalesPrice());
-			// productPriceprice.setUom(productPriceDTO.getUomId());
+			UomDTO uomDTO = uomService.findUomId(productPriceDTO.getUomId());
+			productPriceprice
+					.setUom(uomService.mapUomDTOToEntity(uomDTO, productPriceprice.getUom()));
 			if (productPriceprice.getProduct() == null) {
 				productPriceprice.setProduct(product);
 			}
@@ -45,7 +52,7 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 
 	@Override
 	public List<ProductPriceDTO> findByProductId(Long id) {
-		// final List<ProductPriceDTO> userRoleList =
+		// final List<ProductPriceDTO> productPriceList =
 		// userRoleMapRepository.findByUserId(id);
 		// return userRoleList != null && userRoleList.isEmpty() ? null : userRoleList;
 		return null;

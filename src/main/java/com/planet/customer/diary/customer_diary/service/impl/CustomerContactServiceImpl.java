@@ -12,15 +12,14 @@ import com.planet.customer.diary.customer_diary.model.dto.CustomerContactDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerContactService;
 
-@Service
+@Service(value = "customerContactService")
 public class CustomerContactServiceImpl extends BasicServiceImpl implements CustomerContactService {
 
 	@Autowired
 	private GenericRepository genericRepository;
-	
-	
-	
+
 	@Override
+	@Transactional(readOnly = true)
 	public List<CustomerContact> findAll() {
 		return genericRepository.findAll(CustomerContact.class);
 	}

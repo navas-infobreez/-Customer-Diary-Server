@@ -12,7 +12,7 @@ import com.planet.customer.diary.customer_diary.model.dto.UserContactDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.UserContactService;
 
-@Service
+@Service(value = "userContactService")
 public class UserContactServiceImpl extends BasicServiceImpl implements UserContactService {
 
 	@Autowired

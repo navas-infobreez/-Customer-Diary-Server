@@ -40,10 +40,8 @@ public class BasicServiceImpl {
 		try {
 			tempDTO = dtoClass.newInstance();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (entity != null) {

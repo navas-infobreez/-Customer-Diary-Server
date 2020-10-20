@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Customer;
@@ -19,8 +18,6 @@ import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerService;
 
 @Service(value = "customerService")
-@Transactional
-@EnableTransactionManagement
 public class CustomerServiceImpl extends BasicServiceImpl implements CustomerService{
 
 	@Autowired
