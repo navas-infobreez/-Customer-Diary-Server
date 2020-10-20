@@ -1,6 +1,6 @@
 package com.planet.customer.diary.customer_diary.model.dto;
 
-public class ProductCategoryDTO extends BaseDTO {
+public class UomDTO extends BaseDTO {
 
 	private String name;
 
@@ -11,14 +11,14 @@ public class ProductCategoryDTO extends BaseDTO {
 	private boolean active;
 
 
-	public ProductCategoryDTO(final Long id, final String name, final String searchKey, final boolean active) {
+	public UomDTO(final Long id, final String name, final String searchKey, final boolean active) {
 		super(id);
 		this.name = name;
 		this.searchKey = searchKey;
 		this.active = active;
 	}
 	
-	public ProductCategoryDTO() {
+	public UomDTO() {
 		
 	}
 
@@ -72,8 +72,8 @@ public class ProductCategoryDTO extends BaseDTO {
 
 	@Override
 	public String toString() {
-		return "ProductCategoryDTO [name=" + name + ", description=" + description + ", searchKey=" + searchKey
-				+ ", active=" + active + "]";
+		return "UomDTO [name=" + name + ", description=" + description + ", searchKey=" + searchKey + ", active="
+				+ active + "]";
 	}
 
 }
