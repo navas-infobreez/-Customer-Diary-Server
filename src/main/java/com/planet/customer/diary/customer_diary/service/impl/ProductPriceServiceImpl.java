@@ -31,6 +31,10 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 			// actualProductPriceList.stream().filter(aUserRoleMap ->
 			// aUserRoleMap.getUserRole().getId().equals(userRoleDTO.getId())).
 			// findFirst().get() : new UserRoleMap();
+			productPriceprice.setPurchasePrice(productPriceDTO.getPurchasePrice());
+			productPriceprice.setSalesPrice(productPriceDTO.getSalesPrice());
+			productPriceprice.setDiscntSalesPrice(productPriceDTO.getDiscntSalesPrice());
+			// productPriceprice.setUom(productPriceDTO.getUomId());
 			if (productPriceprice.getProduct() == null) {
 				productPriceprice.setProduct(product);
 			}

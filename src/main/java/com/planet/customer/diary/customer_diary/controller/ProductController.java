@@ -58,7 +58,7 @@ public class ProductController {
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the all products", products);
 	}
 
-	@GetMapping(value = "getallproduct")
+	@GetMapping(value = "getallactiveproduct")
 	public ResponseDTO<List<ProductDTO>> getAllActiveProduct() {
 		final List<ProductDTO> products = productService.getAllActiveProduct();
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the all active products", products);
