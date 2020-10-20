@@ -10,7 +10,6 @@ import com.planet.customer.diary.customer_diary.entity.Product;
 import com.planet.customer.diary.customer_diary.entity.ProductPrice;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
-import com.planet.customer.diary.customer_diary.repository.UserRoleMapRepository;
 import com.planet.customer.diary.customer_diary.service.ProductPriceService;
 
 @Service
@@ -18,10 +17,7 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 
 	@Autowired
 	private GenericRepository genericRepository;
-	
-	@Autowired
-	private UserRoleMapRepository userRoleMapRepository;
-	
+
 	@Override
 	public List<ProductPrice> mapProductPriceDTOToEntity(final List<ProductPriceDTO> productPriceDTOList,
 			final Product product) {

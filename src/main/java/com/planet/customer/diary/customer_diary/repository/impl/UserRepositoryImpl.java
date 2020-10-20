@@ -23,9 +23,9 @@ public class UserRepositoryImpl implements UserRepository {
 	@Override
 	public User findByUserName(final String username) {
 		final String hql = "from User where lower(userName) = :username";
-		List list = getSession().createQuery(hql).setParameter("username", username.toLowerCase()).list();
+		List<User> userList = getSession().createQuery(hql).setParameter("username", username.toLowerCase()).list();
 		
-		return list.size() == 1 ? (User)list.get(0): null;
+		return userList.size() == 1 ? (User) userList.get(0) : null;
 	}
 
 }
