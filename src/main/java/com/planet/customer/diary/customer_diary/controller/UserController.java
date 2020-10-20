@@ -24,7 +24,7 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping(value = "getuserdetails")
+	@GetMapping(value = "getuserdetails")
 	public ResponseDTO<UserDTO> getUserDetails(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		final UserDTO user = userService.findByUserId(id);
@@ -32,7 +32,7 @@ public class UserController {
 				user);
 	}
 	
-	@PostMapping(value = "deleteuser")
+	@GetMapping(value = "deleteuser")
 	public ResponseDTO<UserDTO> deleteUser(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		userService.delete(id);
@@ -40,7 +40,7 @@ public class UserController {
 				null);
 	}
 	
-	@PostMapping(value = "getuserdetailsbyname")
+	@GetMapping(value = "getuserdetailsbyname")
 	public ResponseDTO<UserDTO> getUserDetailsbyUserName(@RequestParam String userName) {
 		final UserDTO user = userService.findByUserName(userName);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the user details",

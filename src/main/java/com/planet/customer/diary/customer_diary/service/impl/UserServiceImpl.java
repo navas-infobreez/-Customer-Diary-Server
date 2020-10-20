@@ -132,8 +132,6 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 		return userDTO;
 	}
 
-
-
 	@Override
 	@Transactional//(readOnly = true)
 	public UserDTO findByUserName(final String username) {
