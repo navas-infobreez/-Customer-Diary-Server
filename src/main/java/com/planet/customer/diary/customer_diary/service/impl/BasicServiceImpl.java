@@ -37,6 +37,7 @@ public class BasicServiceImpl {
 
 	protected <E extends BaseDTO> E mapEntityToDTO(final BaseEntity entity, final Class<E> dtoClass) {
 		E tempDTO = null;
+		if (entity != null) {
 		try {
 			tempDTO = dtoClass.newInstance();
 		} catch (InstantiationException e) {
@@ -44,7 +45,6 @@ public class BasicServiceImpl {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		if (entity != null) {
 			tempDTO = (E) modelMapper.map(entity, tempDTO.getClass());
 			// tempUserDTO.setPassword(null);
 			// tempUserDTO.mapUserContact(user);

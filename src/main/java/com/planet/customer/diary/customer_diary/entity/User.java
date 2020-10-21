@@ -92,8 +92,11 @@ public class User extends BaseEntity implements Serializable {
 	  if (userRoleMaps != null) {
 			if (this.userRoleMaps != null) {
 				this.userRoleMaps.clear();
+				this.userRoleMaps.addAll(userRoleMaps);
+			} else {
+				this.userRoleMaps = userRoleMaps;
 			}
-			this.userRoleMaps = userRoleMaps;
+
 		 }
 	}
 

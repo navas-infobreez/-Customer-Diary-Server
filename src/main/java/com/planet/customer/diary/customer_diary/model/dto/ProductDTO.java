@@ -12,7 +12,7 @@ public class ProductDTO extends BaseDTO {
 	
 	private boolean active;
 
-	private ProductCategoryDTO productCategory;
+	private Long productCategoryId;
 
 	private List<ProductPriceDTO> productPriceDTOList;
 
@@ -66,12 +66,12 @@ public class ProductDTO extends BaseDTO {
 		this.active = active;
 	}
 
-	public ProductCategoryDTO getProductCategory() {
-		return productCategory;
+	public Long getProductCategoryId() {
+		return productCategoryId;
 	}
 
-	public void setProductCategory(ProductCategoryDTO productCategory) {
-		this.productCategory = productCategory;
+	public void setProductCategoryId(Long productCategoryId) {
+		this.productCategoryId = productCategoryId;
 	}
 
 	@Override

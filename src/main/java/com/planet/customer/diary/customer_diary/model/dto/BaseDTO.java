@@ -1,5 +1,6 @@
 package com.planet.customer.diary.customer_diary.model.dto;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.lang.NonNull;
 
 
@@ -26,5 +27,8 @@ public class BaseDTO {
 		this.id = id;
 	}
 	
-
+	@Transient
+	public boolean isEmpty() {
+		return getId() == null || getId() < 0;
+	}
 }

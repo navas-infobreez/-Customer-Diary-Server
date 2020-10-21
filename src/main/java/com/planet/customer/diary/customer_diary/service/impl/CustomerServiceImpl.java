@@ -44,10 +44,6 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 		CustomerDTO tempCustomerDTO = new CustomerDTO();
 		if (customer != null) {
 			tempCustomerDTO = modelMapper.map(customer, tempCustomerDTO.getClass());
-			tempCustomerDTO.setFirstName(customer.getFirstName());
-			tempCustomerDTO.setLastName(customer.getLastName());
-			tempCustomerDTO.setSearchKey(customer.getSearchKey());
-			tempCustomerDTO.setGstNo(customer.getGstNo());			
 		}
 		return tempCustomerDTO;
 	}
@@ -91,13 +87,16 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 			final Serializable userId = genericRepository.save(mapDTOToCustomerEntity(customerDTO));
 			customerDTO.setId((Long) userId);
 		}
-		return customerDTO;
+		return mapCustomerEntityToDTO(findById(customerDTO.getId()));
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public CustomerDTO findByCustomerId(Long id) {
 		final Customer customer =  findById(id);
+		if (customer == null) {
+			return null;
+		}
 		return mapCustomerEntityToDTO(customer);
 	}
 
@@ -112,11 +111,11 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 
 
 	@Override
-	@Transactional
+	@Transactional(readOnly = true)
 	public CustomerDTO findBySearchKey(String customerSearchKey) {
 		final Customer customer = customerRepository.findBySearchKey(customerSearchKey);
 		if (customer == null) {
-			return new CustomerDTO();
+			return null;
 		}
 		return mapCustomerEntityToDTO(customer);
 	}

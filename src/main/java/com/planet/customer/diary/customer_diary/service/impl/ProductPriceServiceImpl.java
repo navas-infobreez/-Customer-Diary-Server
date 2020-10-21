@@ -11,6 +11,7 @@ import com.planet.customer.diary.customer_diary.entity.ProductPrice;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
 import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
+import com.planet.customer.diary.customer_diary.repository.ProductPriceRepository;
 import com.planet.customer.diary.customer_diary.service.ProductPriceService;
 import com.planet.customer.diary.customer_diary.service.UomService;
 
@@ -23,13 +24,22 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 	@Autowired
 	private UomService uomService;
 
+	@Autowired
+	private ProductPriceRepository productPriceRepository;
+
 	@Override
 	public List<ProductPrice> mapProductPriceDTOToEntity(final List<ProductPriceDTO> productPriceDTOList,
 			final Product product) {
-		// List<ProductPrice> actualProductPriceList = product.getProductPriceList();
-		final List<ProductPrice> tempProductPriceList = new ArrayList<>();
+		List<ProductPrice> tempProductPriceList  = null;
+		if(productPriceDTOList == null) {
+			if(product.getId() != null && product.getId() > 0) {
+				tempProductPriceList = productPriceRepository.findByProductId(product.getId());
+			}
+			return tempProductPriceList;
+		}
+		tempProductPriceList = new ArrayList<>();
 		for (final ProductPriceDTO productPriceDTO : productPriceDTOList) {
-			ProductPrice productPriceprice = productPriceDTO.getId() > 0 ? findById(productPriceDTO.getId())
+			ProductPrice productPriceprice = !productPriceDTO.isEmpty() ? findById(productPriceDTO.getId())
 					: new ProductPrice();
 			// final UserRoleMap userRoleMap = actualRoleMaps != null &&
 			// actualRoleMaps.size() > 0 ?
@@ -52,14 +62,16 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 
 	@Override
 	public List<ProductPriceDTO> findByProductId(Long id) {
-		// final List<ProductPriceDTO> productPriceList =
-		// userRoleMapRepository.findByUserId(id);
-		// return userRoleList != null && userRoleList.isEmpty() ? null : userRoleList;
-		return null;
+		final List<ProductPrice> productPriceList = productPriceRepository.findByProductId(id);
+		return mapProductPriceEntityToDTO(productPriceList);
 	}
 	
 	private ProductPrice findById(final Long id) {
 		return genericRepository.findById(ProductPrice.class, id);
 	}
 	
+	private List<ProductPriceDTO> mapProductPriceEntityToDTO(final List<ProductPrice> ProductPriceList) {
+		return (List<ProductPriceDTO>) mapEntitiesToDTOs(ProductPriceList, ProductPriceDTO.class);
+	}
+
 }

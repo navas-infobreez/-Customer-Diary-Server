@@ -31,7 +31,7 @@ public class ProductCategoryServiceImpl extends BasicServiceImpl implements Prod
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public ProductCategoryDTO createOrUpdateProductCategory(final ProductCategoryDTO productCategoryDTO) {
 		if(productCategoryDTO == null)
 			return null;
@@ -68,11 +68,21 @@ public class ProductCategoryServiceImpl extends BasicServiceImpl implements Prod
 
 	public ProductCategory mapProductCategoryDTOToEntity(ProductCategoryDTO productCategoryDTO,
 			ProductCategory productCategory) {
-		if (productCategory == null || productCategory.getId() < 0) {
+		if (productCategory != null && productCategory.getId() > 0) {
+			productCategory.setActive(productCategoryDTO.isActive());
+			productCategory.setDescription(productCategoryDTO.getDescription());
+			productCategory.setSearchKey(productCategoryDTO.getSearchKey());
+			productCategory.setName(productCategoryDTO.getName());
+		} else {
 			productCategory = new ProductCategory();
 			productCategory = (ProductCategory) super.mapDTOToEntity(productCategoryDTO, productCategory);
 		}
 		return productCategory;
+	}
+
+	@Override
+	public ProductCategory findbyProductCategoryId(Long id) {
+		return findById(id);
 	}
 	
 }

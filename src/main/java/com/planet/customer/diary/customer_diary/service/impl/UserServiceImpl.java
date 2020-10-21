@@ -127,9 +127,7 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 			final Serializable userId = genericRepository.save(mapDTOToUserEntity(userDTO));
 			userDTO.setId((Long) userId);
 		}
-		
-			
-		return userDTO;
+		return mapUserEntityToDTO(findById(userDTO.getId()));
 	}
 
 	@Override
