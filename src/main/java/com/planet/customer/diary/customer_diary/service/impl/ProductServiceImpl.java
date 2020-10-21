@@ -2,6 +2,7 @@ package com.planet.customer.diary.customer_diary.service.impl;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Product;
+import com.planet.customer.diary.customer_diary.entity.ProductCategory;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
+import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.ProductRepository;
 import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
@@ -36,11 +39,21 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 
 	
 	private List<ProductDTO> mapProductEntityToDTO(final List<Product> productList) {
-		return (List<ProductDTO>) mapEntitiesToDTOs(productList, ProductDTO.class);
+		List<ProductDTO> tempDTOs = null;
+		if (!productList.isEmpty()) {
+			tempDTOs = productList.stream().map(this::mapProductEntityToDTO)
+					.collect(Collectors.toList());
+		}
+		return tempDTOs;
 	}
 
 	private ProductDTO mapProductEntityToDTO(final Product product) {
-		return mapEntityToDTO(product, ProductDTO.class);
+		ProductDTO productDTO = mapEntityToDTO(product, ProductDTO.class);
+		productDTO.setProductCategoryId(product.getProductCategory().getId());
+		final List<ProductPriceDTO> productPriceDTOList = (List<ProductPriceDTO>) mapEntitiesToDTOs(
+				product.getProductPriceList(), ProductPriceDTO.class);
+		productDTO.setProductPriceDTOList(productPriceDTOList);
+		return productDTO;
 	}
 
 	private Product mapDTOToProductEntity(final ProductDTO productDTO) {
@@ -55,9 +68,9 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 			product = new Product();
 			product = (Product) mapDTOToEntity(productDTO, product);
 		}
-		product.setProductCategory(
-				productCategoryService.mapProductCategoryDTOToEntity(productDTO.getProductCategory(),
-						product.getProductCategory()));
+		ProductCategory productCategory = productCategoryService
+				.findbyProductCategoryId(productDTO.getProductCategoryId());
+		product.setProductCategory(productCategory);
 		product.setProductPriceList(
 				productPriceService.mapProductPriceDTOToEntity(productDTO.getProductPriceDTOList(), product));
 		return product;
@@ -102,16 +115,18 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 			final Serializable userId = genericRepository.save(mapDTOToProductEntity(productDTO));
 			productDTO.setId((Long) userId);
 		}					
-		return productDTO;
+		return mapProductEntityToDTO(findById(productDTO.getId()));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> getAllActiveProduct() {
 		List<Product> allActiveProduct = productRepository.getAllActiveProduct();
 		return mapProductEntityToDTO(allActiveProduct);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<ProductDTO> findByProductCategoryId(Long categoryId) {
 		List<Product> productList = productRepository.findByProductCategoryId(categoryId);
 		return mapProductEntityToDTO(productList);

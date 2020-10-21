@@ -35,6 +35,7 @@ public class CustomerContactServiceImpl extends BasicServiceImpl implements Cust
 			genericRepository.saveOrUpdate(customerContact);
 		}else {			
 			id = (Long) genericRepository.save(customerContact);
+			customerContactDTO.setId(id);
 		}
 		customerContact = genericRepository.findById(CustomerContact.class, id);
 		return customerContact;

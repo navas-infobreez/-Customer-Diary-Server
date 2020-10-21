@@ -24,7 +24,7 @@ public class CustomerController {
 	@Autowired
 	private CustomerService customerService;
 
-	@PostMapping(value = "getcustomerdetails")
+	@GetMapping(value = "getcustomerdetails")
 	public ResponseDTO<CustomerDTO> getCustomerDetails(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		final CustomerDTO customer = customerService.findByCustomerId(id);
@@ -32,7 +32,7 @@ public class CustomerController {
 				customer);
 	}
 	
-	@PostMapping(value = "deletecustomer")
+	@GetMapping(value = "deletecustomer")
 	public ResponseDTO<CustomerDTO> deleteCustomer(@RequestParam String pid) {
 		final Long id = Long.valueOf(pid);
 		customerService.delete(id);
@@ -40,7 +40,7 @@ public class CustomerController {
 				null);
 	}
 	
-	@PostMapping(value = "getcustomerdetailsbysearchKey")
+	@GetMapping(value = "getcustomerdetailsbysearchKey")
 	public ResponseDTO<CustomerDTO> getCustomerDetailsbySearchKey(@RequestParam String customerSearchKey) {
 		final CustomerDTO customer = customerService.findBySearchKey(customerSearchKey);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customer details",

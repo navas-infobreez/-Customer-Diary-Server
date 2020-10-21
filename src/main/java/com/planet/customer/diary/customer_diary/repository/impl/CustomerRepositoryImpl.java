@@ -22,10 +22,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
 	@Override
 	public Customer findBySearchKey(String searchKey) {
-		final String hql = "from Customer where lower(searchkey) = :searchkey";
-		List list = getSession().createQuery(hql).setParameter("searchkey", searchKey.toLowerCase()).list();
-		
-		return list.size() == 1 ? (Customer)list.get(0): null;
+		final String hql = "from Customer where lower(search_key) = :searchkey";
+		List<Customer> customerList = getSession().createQuery(hql).setParameter("searchkey", searchKey.toLowerCase())
+				.list();
+		return customerList.size() == 1 ? customerList.get(0) : null;
 	}
 
 

@@ -1,7 +1,5 @@
 package com.planet.customer.diary.customer_diary.model.dto;
 
-import javax.persistence.Column;
-
 public class ProductPriceDTO extends BaseDTO {
 
 	private Long productId;
@@ -12,7 +10,6 @@ public class ProductPriceDTO extends BaseDTO {
 
 	private double salesPrice;
 
-	@Column(name = "DISCNT_SALES_PRICE")
 	private double discntSalesPrice;
 
 	public ProductPriceDTO(final Long id, final Long productId, final Long uomId) {
@@ -86,5 +83,6 @@ public class ProductPriceDTO extends BaseDTO {
 		return "ProductPriceDTO [productId=" + productId + ", uomId=" + uomId + ", purchasePrice=" + purchasePrice
 				+ ", salesPrice=" + salesPrice + ", discntSalesPrice=" + discntSalesPrice + "]";
 	}
+
 
 }

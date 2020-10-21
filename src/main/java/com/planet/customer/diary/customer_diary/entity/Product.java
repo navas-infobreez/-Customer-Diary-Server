@@ -103,7 +103,14 @@ public class Product extends BaseEntity implements Serializable {
 	}
 
 	public void setProductPriceList(List<ProductPrice> productPriceList) {
-		this.productPriceList = productPriceList;
+		if (productPriceList != null) {
+			if (this.productPriceList != null) {
+				this.productPriceList.clear();
+				this.productPriceList.addAll(productPriceList);
+			} else {
+				this.productPriceList = (productPriceList);
+			}
+		}
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class UomServiceImpl extends BasicServiceImpl implements UomService {
 	}
 
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional
 	public UomDTO createOrUpdateUom(final UomDTO uomDTO) {
 		if (uomDTO == null)
 			return null;

@@ -11,6 +11,8 @@ public interface ProductCategoryService {
 
 	public ProductCategoryDTO findCategoryId(Long id);
 
+	public ProductCategory findbyProductCategoryId(Long id);
+
 	public ProductCategoryDTO createOrUpdateProductCategory(ProductCategoryDTO productCategoryDTO);
 	
 	public ProductCategory mapProductCategoryDTOToEntity(ProductCategoryDTO productCategoryDTO,
