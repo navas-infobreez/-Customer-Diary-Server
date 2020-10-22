@@ -29,6 +29,6 @@ public class BaseDTO {
 	
 	@Transient
 	public boolean isEmpty() {
-		return getId() == null || getId() < 0;
+		return getId() == null || getId() < 1;
 	}
 }
