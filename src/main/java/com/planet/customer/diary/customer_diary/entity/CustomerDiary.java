@@ -91,7 +91,7 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 	@Column(name = "STATUS")
 	private String status;
 
-	@OneToMany(mappedBy = "customerDiaryLine", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "customerDiary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerDiaryLine> customerDiaryLineList;
 	
 	public CustomerDiary() {
