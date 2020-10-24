@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "TBL_CUSTOMER_DIARY",
-		uniqueConstraints = @UniqueConstraint(name = "unique_Diary", columnNames = "documentNo"))
+		uniqueConstraints = @UniqueConstraint(name = "unique_Diary", columnNames = "DOCUMENT_NO"))
 public class CustomerDiary extends BaseEntity implements Serializable {
 
 
