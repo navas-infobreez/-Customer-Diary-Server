@@ -15,7 +15,9 @@ import com.planet.customer.diary.customer_diary.entity.Customer;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDTO;
 import com.planet.customer.diary.customer_diary.repository.CustomerRepository;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
+import com.planet.customer.diary.customer_diary.service.CustomerContactService;
 import com.planet.customer.diary.customer_diary.service.CustomerService;
+import com.planet.customer.diary.customer_diary.service.UserContactService;
 
 @Service(value = "customerService")
 public class CustomerServiceImpl extends BasicServiceImpl implements CustomerService{
@@ -23,6 +25,9 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 	@Autowired
 	@Qualifier("genericRepository")
 	private GenericRepository genericRepository;
+	
+	@Autowired
+	private CustomerContactService customerContactService;
 	
 	@Autowired
 	@Qualifier("customerRepository")
@@ -59,7 +64,8 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 		}else {
 			customer = new Customer();
 			customer = (Customer) mapDTOToEntity(customerDTO, customer);
-		}		
+		}	
+		customer.setCustomerContact(customerContactService.mapCustomerContactDTOToEntity(customerDTO.getCustomerContact(),customer));
 		return customer;
 	}
 
