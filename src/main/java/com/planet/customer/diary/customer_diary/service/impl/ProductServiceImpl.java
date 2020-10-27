@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Product;
 import com.planet.customer.diary.customer_diary.entity.ProductCategory;
+import com.planet.customer.diary.customer_diary.entity.UOM;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
+import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.ProductRepository;
 import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
@@ -56,7 +58,7 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 		return productDTO;
 	}
 
-	private Product mapDTOToProductEntity(final ProductDTO productDTO) {
+	public Product mapDTOToProductEntity(final ProductDTO productDTO) {
 		Product product = null;
 		if (productDTO.getId() != null && productDTO.getId() > 0) {
 			product = findById(productDTO.getId());
@@ -75,7 +77,7 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 				productPriceService.mapProductPriceDTOToEntity(productDTO.getProductPriceDTOList(), product));
 		return product;
 	}
-
+	
 	private Product findById(final Long id) {
 		return genericRepository.findById(Product.class, id);
 	}

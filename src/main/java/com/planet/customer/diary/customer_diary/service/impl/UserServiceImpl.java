@@ -77,7 +77,7 @@ public class UserServiceImpl extends BasicServiceImpl implements UserDetailsServ
 		return tempUserDTO;
 	}
 
-	private User mapDTOToUserEntity(final UserDTO userDTO) {
+	public User mapDTOToUserEntity(final UserDTO userDTO) {
 		User user = null;	
 		if(userDTO.getId() != null && userDTO.getId() > 0) {
 			user = findById(userDTO.getId());

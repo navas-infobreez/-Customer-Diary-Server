@@ -54,7 +54,7 @@ public class CustomerServiceImpl extends BasicServiceImpl implements CustomerSer
 	}
 
 	
-	private Customer mapDTOToCustomerEntity(final CustomerDTO customerDTO) {
+	public Customer mapDTOToCustomerEntity(final CustomerDTO customerDTO) {
 		Customer customer = null;	
 		if(customerDTO.getId() != null && customerDTO.getId() > 0) {
 			customer = findById(customerDTO.getId());
