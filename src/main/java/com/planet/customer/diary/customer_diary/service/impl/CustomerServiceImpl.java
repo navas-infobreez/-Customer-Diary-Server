@@ -17,7 +17,6 @@ import com.planet.customer.diary.customer_diary.repository.CustomerRepository;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerContactService;
 import com.planet.customer.diary.customer_diary.service.CustomerService;
-import com.planet.customer.diary.customer_diary.service.UserContactService;
 
 @Service(value = "customerService")
 public class CustomerServiceImpl extends BasicServiceImpl implements CustomerService{
