@@ -28,7 +28,7 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 	private GenericRepository genericRepository;
 
 	@Autowired
-	@Qualifier("customerDiaryRepository")
+	@Qualifier("customerDiaryLineRepository")
 	private CustomerDiaryLineRepository customerDiaryLineRepository;
 	
 	@Autowired

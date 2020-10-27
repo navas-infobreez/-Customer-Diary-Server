@@ -110,14 +110,14 @@ public class CustomerDiaryController {
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customerdiary lines", customerDiaryLineDTOs);
 	}
 	
-	@GetMapping(value = "getcustomerdiarylinebycustomerdiaryid")
+	@GetMapping(value = "getcustomerdiarylinebyproductid")
 	public ResponseDTO<CustomerDiaryLineDTO> findByProductId(@RequestParam String productId) {
 		final Long product = Long.valueOf(productId);
 		final List<CustomerDiaryLineDTO> customerDiaryLineDTOs = customerDiaryLineService.findByProductId(product);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customerdiary lines", customerDiaryLineDTOs);
 	}
 	
-	@GetMapping(value = "getcustomerdiarylinebycustomerdiaryid")
+	@GetMapping(value = "getcustomerdiarylinebyproductcategoryid")
 	public ResponseDTO<CustomerDiaryLineDTO> findByProductCategoryId(@RequestParam String productCategoryId) {
 		final Long productCategory = Long.valueOf(productCategoryId);
 		final List<CustomerDiaryLineDTO> customerDiaryLineDTOs = customerDiaryLineService.findByCustomerDiaryId(productCategory);
