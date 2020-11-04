@@ -1,5 +1,7 @@
 package com.planet.customer.diary.customer_diary.controller;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
-import com.planet.customer.diary.customer_diary.entity.CustomerDiaryLine;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductCategoryDTO;
+import com.planet.customer.diary.customer_diary.model.dto.CustomerVisitDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ResponseDTO;
-import com.planet.customer.diary.customer_diary.repository.CustomerDiaryLineRepository;
-import com.planet.customer.diary.customer_diary.repository.CustomerDiaryRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryLineService;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
-import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
-import com.planet.customer.diary.customer_diary.service.ProductService;
+import com.planet.customer.diary.customer_diary.service.CustomerVisitService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -36,6 +33,9 @@ public class CustomerDiaryController {
 	
 	@Autowired
 	private CustomerDiaryLineService customerDiaryLineService;
+	
+	@Autowired
+	private CustomerVisitService customerVisitService;
 	
 	
 	@PostMapping(value = "createorupdatecustomerdiary")
@@ -122,5 +122,38 @@ public class CustomerDiaryController {
 		final Long productCategory = Long.valueOf(productCategoryId);
 		final List<CustomerDiaryLineDTO> customerDiaryLineDTOs = customerDiaryLineService.findByCustomerDiaryId(productCategory);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customerdiary lines", customerDiaryLineDTOs);
+	}
+	
+	@GetMapping(value = "getcustomervistbyid")
+	public ResponseDTO<CustomerVisitDTO> findcustomervistById(@RequestParam String customerVisitId) {
+		final Long customerVisit = Long.valueOf(customerVisitId);
+		final CustomerVisitDTO customerVisitDTO = customerVisitService.findByCustomerVisitId(customerVisit);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTO);
+	}
+	
+	@GetMapping(value = "getcustomervistbycustomerdiaryid")
+	public ResponseDTO<CustomerVisitDTO> findCustomerVistByCustomerDiaryId(@RequestParam String customerDairyId) {
+		final Long customerDairy = Long.valueOf(customerDairyId);
+		final  List<CustomerVisitDTO> customerVisitDTOs = customerVisitService.findByCustomerDiaryId(customerDairy);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTOs);
+	}
+	
+	@GetMapping(value = "getcustomervistbycustomerid")
+	public ResponseDTO<CustomerVisitDTO> findCustomerVistByDate(@RequestParam String customer_id) {
+		final Long customer = Long.valueOf(customer_id);
+		final  List<CustomerVisitDTO> customerVisitDTOs = customerVisitService.findByCustomerId(customer);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTOs);
+	}
+	
+	@GetMapping(value = "getcustomervistbydate")
+	public ResponseDTO<CustomerVisitDTO> findCustomerVistByDate(@RequestParam Date date) {
+		final  List<CustomerVisitDTO> customerVisitDTOs = customerVisitService.findByDate(date);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTOs);
+	}
+	
+	@GetMapping(value = "getcustomervistbytime")
+	public ResponseDTO<CustomerVisitDTO> findCustomerVistByDate(@RequestParam Timestamp time) {
+		final  List<CustomerVisitDTO> customerVisitDTOs = customerVisitService.findByTime(time);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTOs);
 	}
 }
