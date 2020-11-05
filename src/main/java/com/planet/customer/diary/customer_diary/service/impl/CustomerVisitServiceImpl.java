@@ -3,21 +3,20 @@ package com.planet.customer.diary.customer_diary.service.impl;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planet.customer.diary.customer_diary.entity.Customer;
+import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
 import com.planet.customer.diary.customer_diary.entity.CustomerVisit;
-import com.planet.customer.diary.customer_diary.model.dto.CustomerDTO;
-import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerVisitDTO;
 import com.planet.customer.diary.customer_diary.repository.CustomerVisitRepository;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
-import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
-import com.planet.customer.diary.customer_diary.service.CustomerService;
 import com.planet.customer.diary.customer_diary.service.CustomerVisitService;
 
 @Service(value = "customerVisitService")
@@ -28,30 +27,24 @@ public class CustomerVisitServiceImpl extends BasicServiceImpl implements Custom
 	
 	@Autowired
 	private CustomerVisitRepository customerVisitRepository;
-	
-	@Autowired
-	private CustomerDiaryService customerDairyService;
-	
-	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
-	private ModelMapper modelMapper;
-	
+
 	@Override
 	public CustomerVisit mapDTOToCustomerVisitEntity(final CustomerVisitDTO customerVisitDTO) {
 		CustomerVisit customerVisit = null;	
-		if(customerVisitDTO.getId() != null && customerVisitDTO.getId() > 0) {
+		if (!customerVisitDTO.isEmpty()) {
 			customerVisit = findById(customerVisitDTO.getId());
 			customerVisit.setDate(customerVisitDTO.getDate());
 			customerVisit.setTime(customerVisitDTO.getTime());
 			customerVisit.setPlace(customerVisitDTO.getPlace());
-			
-			CustomerDiaryDTO customerDiaryDTO = customerDairyService.findByCustomerDiaryId(customerVisitDTO.getCustomerDiaryId());
-			customerVisit.setCustomerDiary(customerDairyService.mapDTOToCustomerDiaryEntity(customerDiaryDTO));
-			
-			CustomerDTO customerDTO = customerService.findByCustomerId(customerVisitDTO.getCustomerId());
-			customerVisit.setCustomer(customerService.mapDTOToCustomerEntity(customerDTO));			
+			CustomerDiary customerDiary = genericRepository.findById(CustomerDiary.class,
+					customerVisitDTO.getCustomerDiaryId());
+			if (customerDiary == null)
+				throw new EntityNotFoundException("CustomerDiary not found");
+			customerVisit.setCustomerDiary(customerDiary);
+			Customer customer = genericRepository.findById(Customer.class, customerVisitDTO.getCustomerId());
+			if (customer == null)
+				throw new EntityNotFoundException("Customer not found");
+			customerVisit.setCustomer(customer);
 		}else {
 			customerVisit = new CustomerVisit();
 			customerVisit = (CustomerVisit) mapDTOToEntity(customerVisitDTO, customerVisit);
@@ -64,16 +57,18 @@ public class CustomerVisitServiceImpl extends BasicServiceImpl implements Custom
 	}
 	
 	private CustomerVisitDTO mapCustomerVisitEntityToDTO(final CustomerVisit customerVisit) {
-		CustomerVisitDTO tempCustomerVisitDTO = new CustomerVisitDTO();
-		if (customerVisit != null) {
-			tempCustomerVisitDTO = modelMapper.map(customerVisit, tempCustomerVisitDTO.getClass());
-		}
+		CustomerVisitDTO tempCustomerVisitDTO = mapEntityToDTO(customerVisit, CustomerVisitDTO.class);
+		tempCustomerVisitDTO.setCustomerDiaryId(customerVisit.getCustomerDiary().getId());
+		tempCustomerVisitDTO.setCustomerId(customerVisit.getCustomer().getId());
 		return tempCustomerVisitDTO;
 	}
-	
-	
-	private List<CustomerVisitDTO> mapCustomerVisitLineEntityToDTO(final List<CustomerVisit> CustomerVisitListt) {
-		return (List<CustomerVisitDTO>) mapEntitiesToDTOs(CustomerVisitListt, CustomerVisitDTO.class);
+
+	private List<CustomerVisitDTO> mapCustomerVisitLineEntityToDTO(final List<CustomerVisit> customerVisitList) {
+		List<CustomerVisitDTO> tempDTOs = null;
+		if (!customerVisitList.isEmpty()) {
+			tempDTOs = customerVisitList.stream().map(this::mapCustomerVisitEntityToDTO).collect(Collectors.toList());
+		}
+		return tempDTOs;
 	}
 	
 	@Override
@@ -84,18 +79,17 @@ public class CustomerVisitServiceImpl extends BasicServiceImpl implements Custom
 
 	@Override
 	@Transactional
-	public CustomerVisit createOrUpdateCustomerVisit(final CustomerVisitDTO customerVisitDTO) {		
+	public CustomerVisitDTO createOrUpdateCustomerVisit(final CustomerVisitDTO customerVisitDTO) {
 		if(customerVisitDTO == null)
 			return null;
-		CustomerVisit userContact = mapDTOToCustomerVisitEntity(customerVisitDTO);
+		CustomerVisit customerVisit = mapDTOToCustomerVisitEntity(customerVisitDTO);
 		Long id = customerVisitDTO.getId();		
-		if(id != null && id > 0) {
-			genericRepository.saveOrUpdate(userContact);
+		if (!customerVisitDTO.isEmpty()) {
+			genericRepository.saveOrUpdate(customerVisit);
 		}else {			
-			id = (Long) genericRepository.save(userContact);
+			id = (Long) genericRepository.save(customerVisit);
 		}
-		userContact = genericRepository.findById(CustomerVisit.class, id);
-		return userContact;
+		return mapCustomerVisitEntityToDTO(findById(id));
 	}
 
 	@Override

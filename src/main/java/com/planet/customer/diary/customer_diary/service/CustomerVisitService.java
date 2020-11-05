@@ -11,7 +11,7 @@ public interface CustomerVisitService {
 
 	public List<CustomerVisit> findAll();
 
-	public CustomerVisit createOrUpdateCustomerVisit(CustomerVisitDTO customerVisitDTO);
+	public CustomerVisitDTO createOrUpdateCustomerVisit(CustomerVisitDTO customerVisitDTO);
 
 	CustomerVisitDTO findByCustomerVisitId(Long customerVisitId);
 

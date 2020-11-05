@@ -3,6 +3,7 @@ package com.planet.customer.diary.customer_diary.controller;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryChatDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerVisitDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ResponseDTO;
+import com.planet.customer.diary.customer_diary.service.CustomerDiaryChatService;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryLineService;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
 import com.planet.customer.diary.customer_diary.service.CustomerVisitService;
@@ -37,6 +40,8 @@ public class CustomerDiaryController {
 	@Autowired
 	private CustomerVisitService customerVisitService;
 	
+	@Autowired
+	private CustomerDiaryChatService customerDiaryChatService;
 	
 	@PostMapping(value = "createorupdatecustomerdiary")
 	public ResponseDTO<CustomerDiaryDTO> createOrUpdateCustomerDiary(@RequestBody final CustomerDiaryDTO customerDiaryDTO) {
@@ -124,6 +129,12 @@ public class CustomerDiaryController {
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customerdiary lines", customerDiaryLineDTOs);
 	}
 	
+	@PostMapping(value = "createorupdatecustomervist")
+	public ResponseDTO<CustomerVisitDTO> createorupdateCustomerVist(@RequestBody final CustomerVisitDTO customerVisit) {
+		final CustomerVisitDTO customerVisitDTO = customerVisitService.createOrUpdateCustomerVisit(customerVisit);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully updated the CustomerVisit", customerVisitDTO);
+	}
+
 	@GetMapping(value = "getcustomervistbyid")
 	public ResponseDTO<CustomerVisitDTO> findcustomervistById(@RequestParam String customerVisitId) {
 		final Long customerVisit = Long.valueOf(customerVisitId);
@@ -155,5 +166,32 @@ public class CustomerDiaryController {
 	public ResponseDTO<CustomerVisitDTO> findCustomerVistByDate(@RequestParam Timestamp time) {
 		final  List<CustomerVisitDTO> customerVisitDTOs = customerVisitService.findByTime(time);
 		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the customervisit", customerVisitDTOs);
+	}
+
+	@PostMapping(value = "createorupdatecustomerdiarychat")
+	public ResponseDTO<CustomerDiaryChatDTO> createorupdateCustomerDiaryChat(
+			@RequestBody final List<CustomerDiaryChatDTO> customerDiaryChatList) {
+		final List<CustomerDiaryChatDTO> customerDiaryChatDTOList = customerDiaryChatService
+				.createOrUpdateCustomerDiaryChat(customerDiaryChatList);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully updated the CustomerDiaryChat",
+				customerDiaryChatDTOList);
+	}
+
+	@GetMapping(value = "getcustomerdiarychatbyid")
+	public ResponseDTO<CustomerDiaryChatDTO> getcustomerDiaryChatbyId(@RequestParam String customerDiaryId) {
+		final Long diaryId = Long.valueOf(customerDiaryId);
+		final List<CustomerDiaryChatDTO> customerDiaryChatDTOList = customerDiaryChatService
+				.findByCustomerDiaryId(diaryId);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the CustomerDiaryChat",
+				customerDiaryChatDTOList);
+	}
+
+	@GetMapping(value = "getcustomerdiarychatbyids")
+	public ResponseDTO<CustomerDiaryChatDTO> getcustomerDiaryChatbyIds(@RequestParam List<String> customerDiaryIds) {
+		List<Long> diaryIds = customerDiaryIds.stream().map(Long::valueOf).collect(Collectors.toList());
+		final List<CustomerDiaryChatDTO> customerDiaryChatDTOList = customerDiaryChatService
+				.findByCustomerDiaryList(diaryIds);
+		return new ResponseDTO<>(HttpStatus.OK.value(), "Successfully loaded the CustomerDiaryChat",
+				customerDiaryChatDTOList);
 	}
 }
