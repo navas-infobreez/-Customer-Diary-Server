@@ -12,19 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
-import com.planet.customer.diary.customer_diary.entity.CustomerDiaryLine;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductCategoryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ResponseDTO;
-import com.planet.customer.diary.customer_diary.repository.CustomerDiaryLineRepository;
-import com.planet.customer.diary.customer_diary.repository.CustomerDiaryRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryLineService;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
-import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
-import com.planet.customer.diary.customer_diary.service.ProductService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

@@ -1,4 +1,4 @@
-package com.planet.customer.diary.customer_diary.service;
+package com.planet.customer.diary.customer_diary.repository.impl;
 
 import java.util.List;
 

@@ -28,13 +28,14 @@ public class BasicServiceImpl {
 	protected List<? extends BaseDTO> mapEntitiesToDTOs(final List<? extends BaseEntity> baseEntityList,
 			final Class<? extends BaseDTO> dtoClass) {
 		List<? extends BaseDTO> tempDTOs = null;
-		if (!baseEntityList.isEmpty()) {
+		if (baseEntityList != null && !baseEntityList.isEmpty()) {
 			tempDTOs = baseEntityList.stream().map(beList -> mapEntityToDTO(beList, dtoClass))
 					.collect(Collectors.toList());
 		}
 		return tempDTOs;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <E extends BaseDTO> E mapEntityToDTO(final BaseEntity entity, final Class<E> dtoClass) {
 		E tempDTO = null;
 		if (entity != null) {

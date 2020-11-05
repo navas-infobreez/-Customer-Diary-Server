@@ -4,9 +4,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.planet.customer.diary.customer_diary.entity.Customer;
-import com.planet.customer.diary.customer_diary.entity.User;
-
 public class CustomerDiaryDTO extends BaseDTO {
 
 	private String invoiceNo;
@@ -21,7 +18,7 @@ public class CustomerDiaryDTO extends BaseDTO {
 
 	private Date diaryDate;
 
-	private String documentNo;
+	private Long documentNo;
 	
 	private boolean shiptoCustomerAddress;
 
@@ -55,7 +52,7 @@ public class CustomerDiaryDTO extends BaseDTO {
 	
 	private List<CustomerDiaryLineDTO> CustomerDiaryLineDTOList;
 
-	public CustomerDiaryDTO(final Long id, final String documentNo, final Long customerId, final Long salesRepId) {
+	public CustomerDiaryDTO(final Long id, final Long documentNo, final Long customerId, final Long salesRepId) {
 		super(id);
 		this.documentNo = documentNo;
 		this.customerId = customerId;
@@ -113,11 +110,11 @@ public class CustomerDiaryDTO extends BaseDTO {
 		this.diaryDate = diaryDate;
 	}
 
-	public String getDocumentNo() {
+	public Long getDocumentNo() {
 		return documentNo;
 	}
 
-	public void setDocumentNo(String documentNo) {
+	public void setDocumentNo(Long documentNo) {
 		this.documentNo = documentNo;
 	}
 

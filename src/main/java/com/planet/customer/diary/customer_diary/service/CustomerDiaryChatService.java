@@ -6,7 +6,7 @@ import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
 import com.planet.customer.diary.customer_diary.entity.CustomerDiaryLine;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
 
-public interface CustomerDiaryLineService {
+public interface CustomerDiaryChatService {
 
 	public List<CustomerDiaryLineDTO> findByCustomerDiaryId(Long id);
 	

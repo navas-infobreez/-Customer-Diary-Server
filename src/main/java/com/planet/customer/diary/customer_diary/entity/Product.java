@@ -40,7 +40,7 @@ public class Product extends BaseEntity implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PRODUCT_CATEGORY_ID", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
 	private ProductCategory productCategory;
 	
 	public Product() {

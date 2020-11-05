@@ -70,6 +70,7 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 		return genericRepository.findById(ProductPrice.class, id);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private List<ProductPriceDTO> mapProductPriceEntityToDTO(final List<ProductPrice> ProductPriceList) {
 		return (List<ProductPriceDTO>) mapEntitiesToDTOs(ProductPriceList, ProductPriceDTO.class);
 	}

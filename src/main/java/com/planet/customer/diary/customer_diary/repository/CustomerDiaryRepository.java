@@ -16,4 +16,7 @@ public interface CustomerDiaryRepository {
 	public List<CustomerDiary> findByDocumentNo(String documentno);
 
 	public List<CustomerDiary> findByInvoiceNo(String invoiceno);
+
+	public long getNextDocumentNo();
+
 }

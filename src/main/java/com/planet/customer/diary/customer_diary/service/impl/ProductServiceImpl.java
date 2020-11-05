@@ -11,10 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Product;
 import com.planet.customer.diary.customer_diary.entity.ProductCategory;
-import com.planet.customer.diary.customer_diary.entity.UOM;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
-import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.ProductRepository;
 import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
@@ -49,6 +47,7 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 		return tempDTOs;
 	}
 
+	@SuppressWarnings("unchecked")
 	private ProductDTO mapProductEntityToDTO(final Product product) {
 		ProductDTO productDTO = mapEntityToDTO(product, ProductDTO.class);
 		productDTO.setProductCategoryId(product.getProductCategory().getId());

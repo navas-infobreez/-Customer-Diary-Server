@@ -2,6 +2,9 @@ package com.planet.customer.diary.customer_diary.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,16 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
 import com.planet.customer.diary.customer_diary.entity.CustomerDiaryLine;
+import com.planet.customer.diary.customer_diary.entity.Product;
+import com.planet.customer.diary.customer_diary.entity.ProductCategory;
+import com.planet.customer.diary.customer_diary.entity.UOM;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductCategoryDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
-import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
-import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.CustomerDiaryLineRepository;
+import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryLineService;
-import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
-import com.planet.customer.diary.customer_diary.service.ProductService;
-import com.planet.customer.diary.customer_diary.service.UomService;
 
 @Service(value = "customerDiaryLineService")
 public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements CustomerDiaryLineService {
@@ -30,15 +30,6 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 	@Autowired
 	@Qualifier("customerDiaryLineRepository")
 	private CustomerDiaryLineRepository customerDiaryLineRepository;
-	
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private UomService uomService;
-	
-	@Autowired
-	private ProductCategoryService productCategoryService;
 
 	@Override
 	public List<CustomerDiaryLine> mapCustomerDiaryLineDTOToEntity(final List<CustomerDiaryLineDTO> customerDiaryLineDTOList,
@@ -57,16 +48,20 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 			customerDiaryLine.setSalesPrice(customerDiaryLineDTO.getSalesPrice());
 			customerDiaryLine.setQty(customerDiaryLineDTO.getQty());
 			customerDiaryLine.setDescription(customerDiaryLineDTO.getDescription());
-			
-			ProductDTO productDTO = productService.findByProductId(customerDiaryLineDTO.getProductId());
-			customerDiaryLine.setProduct( productService.mapDTOToProductEntity(productDTO));
-			
-			UomDTO uomDTO = uomService.findUomId(customerDiaryLineDTO.getUomId());
-			customerDiaryLine.setUom(uomService.mapUomDTOToEntity(uomDTO, customerDiaryLine.getUom()));
-			
-			ProductCategoryDTO productCategoryDTO = productCategoryService.findCategoryId(customerDiaryLineDTO.getProductCategoryId());
-			customerDiaryLine.setProductCategory( productCategoryService
-					.mapProductCategoryDTOToEntity(productCategoryDTO, customerDiaryLine.getProductCategory()));
+			Product product = genericRepository.findById(Product.class, customerDiaryLineDTO.getProductId());
+			if (product == null)
+				throw new EntityNotFoundException("Product" + customerDiaryLineDTO.getProductId() + " not found");
+			customerDiaryLine.setProduct(product);
+			UOM uom = genericRepository.findById(UOM.class, customerDiaryLineDTO.getUomId());
+			if (uom == null)
+				throw new EntityNotFoundException("uom" + customerDiaryLineDTO.getUomId() + " not found");
+			customerDiaryLine.setUom(uom);
+			ProductCategory productCategory = genericRepository.findById(ProductCategory.class,
+					customerDiaryLineDTO.getProductCategoryId());
+			if (productCategory == null)
+				throw new EntityNotFoundException(
+						"ProductCategory" + customerDiaryLineDTO.getProductCategoryId() + " not found");
+			customerDiaryLine.setProductCategory(productCategory);
 			
 			if (customerDiaryLine.getCustomerDiary() == null) {
 				customerDiaryLine.setCustomerDiary(customerDiary);
@@ -80,8 +75,22 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 		return genericRepository.findById(CustomerDiaryLine.class, id);
 	}
 	
-	private List<CustomerDiaryLineDTO> mapCustomerDiaryLineEntityToDTO(final List<CustomerDiaryLine> CustomerDiaryLineList) {
-		return (List<CustomerDiaryLineDTO>) mapEntitiesToDTOs(CustomerDiaryLineList, CustomerDiaryLineDTO.class);
+	public List<CustomerDiaryLineDTO> mapCustomerDiaryLineEntityToDTO(
+			final List<CustomerDiaryLine> customerDiaryLineList) {
+		List<CustomerDiaryLineDTO> tempDTOs = null;
+		if (customerDiaryLineList != null && !customerDiaryLineList.isEmpty()) {
+			tempDTOs = customerDiaryLineList.stream().map(this::mapCustomerDiaryLineEntityToDTO)
+					.collect(Collectors.toList());
+		}
+		return tempDTOs;
+	}
+
+	private CustomerDiaryLineDTO mapCustomerDiaryLineEntityToDTO(CustomerDiaryLine customerDiaryLine) {
+		CustomerDiaryLineDTO customerDiaryLineDTO = mapEntityToDTO(customerDiaryLine, CustomerDiaryLineDTO.class);
+		customerDiaryLineDTO.setProductCategoryId(customerDiaryLine.getProductCategory().getId());
+		customerDiaryLineDTO.setUomId(customerDiaryLine.getUom().getId());
+		customerDiaryLineDTO.setProductId(customerDiaryLine.getProduct().getId());
+		return customerDiaryLineDTO;
 	}
 
 	@Override
