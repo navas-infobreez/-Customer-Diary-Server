@@ -55,7 +55,7 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 		return customerDiaryDTO;
 	}
 
-	private CustomerDiary mapDTOToCustomerDiaryEntity(final CustomerDiaryDTO customerDiaryDTO) {
+	public CustomerDiary mapDTOToCustomerDiaryEntity(final CustomerDiaryDTO customerDiaryDTO) {
 		CustomerDiary customerDiary = null;
 		if (customerDiaryDTO.getId() != null && customerDiaryDTO.getId() > 0) {
 			customerDiary = findById(customerDiaryDTO.getId());
