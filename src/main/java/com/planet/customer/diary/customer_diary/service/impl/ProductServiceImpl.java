@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,8 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 		}
 		ProductCategory productCategory = productCategoryService
 				.findbyProductCategoryId(productDTO.getProductCategoryId());
+		if (productCategory == null)
+			throw new EntityNotFoundException("ProductCategory not found");
 		product.setProductCategory(productCategory);
 		product.setProductPriceList(
 				productPriceService.mapProductPriceDTOToEntity(productDTO.getProductPriceDTOList(), product));
