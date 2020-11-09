@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -17,15 +17,15 @@ public class CustomerDiaryLine extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 7117271549414306018L;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "CUSTOMER_DIARY_ID", nullable = false)
 	private CustomerDiary customerDiary;
 	
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PRODUCT_ID", nullable = false)
 	private Product product;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "UOM_ID", nullable = false)
 	private UOM uom;
 
@@ -35,7 +35,7 @@ public class CustomerDiaryLine extends BaseEntity implements Serializable {
 	@Column(name = "QTY")
 	private double qty;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PRODUCT_CATEGORY_ID", nullable = false)
 	private ProductCategory productCategory;
 

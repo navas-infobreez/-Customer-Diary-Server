@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.planet.customer.diary.customer_diary.entity.Product;
 import com.planet.customer.diary.customer_diary.entity.ProductCategory;
-import com.planet.customer.diary.customer_diary.entity.UOM;
 import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
 import com.planet.customer.diary.customer_diary.model.dto.ProductPriceDTO;
-import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
 import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.ProductRepository;
 import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
@@ -49,6 +49,7 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 		return tempDTOs;
 	}
 
+	@SuppressWarnings("unchecked")
 	private ProductDTO mapProductEntityToDTO(final Product product) {
 		ProductDTO productDTO = mapEntityToDTO(product, ProductDTO.class);
 		productDTO.setProductCategoryId(product.getProductCategory().getId());
@@ -72,6 +73,8 @@ public class ProductServiceImpl extends BasicServiceImpl implements ProductServi
 		}
 		ProductCategory productCategory = productCategoryService
 				.findbyProductCategoryId(productDTO.getProductCategoryId());
+		if (productCategory == null)
+			throw new EntityNotFoundException("ProductCategory not found");
 		product.setProductCategory(productCategory);
 		product.setProductPriceList(
 				productPriceService.mapProductPriceDTOToEntity(productDTO.getProductPriceDTOList(), product));

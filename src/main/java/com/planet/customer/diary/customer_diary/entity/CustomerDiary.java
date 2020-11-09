@@ -9,19 +9,27 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.planet.customer.diary.customer_diary.model.constants.CustomerDiaryPurpose;
+import com.planet.customer.diary.customer_diary.model.constants.CustomerDiaryStatus;
 
 @Entity
 @Table(name = "TBL_CUSTOMER_DIARY",
 		uniqueConstraints = @UniqueConstraint(name = "unique_Diary", columnNames = "DOCUMENT_NO"))
 public class CustomerDiary extends BaseEntity implements Serializable {
 
-
-	private static final long serialVersionUID = 7568415659209199204L;
+	private static final long serialVersionUID = -5627410044823351383L;
 
 	@Column(name = "INVOICE_NO", unique = true)
 	private String invoiceNo;
@@ -35,25 +43,30 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 	@Column(name = "ACTIVE")
 	private boolean active;
 
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "CUSTOMER_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private Customer customer;
+
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "SALESREP_ID", nullable = false)
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private User salesRep;
+
 	@Column(name = "CREATED_DATE")
 	private Timestamp createdDate;
 
 	@Column(name = "DIARY_DATE")
 	private Date diaryDate;
-
-	@Column(name = "DOCUMENT_NO")
-	private String documentNo;
+	
+	@SequenceGenerator(name = "pk_sequence", sequenceName = "document_number_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pk_sequence")
+	@Column(name = "DOCUMENT_NO", updatable = false, columnDefinition = "serial")
+	private Long documentNo;
 
 	@Column(name = "SHIP_CMR_ADDRS")
 	private boolean shiptoCustomerAddress;
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "CUSTOMER_ID", nullable = false)
-	private Customer customer;
-
-	@OneToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "SALESREP_ID", nullable = false)
-	private User salesRep;
 
 	@Column(name = "totalAmount")
 	private double totalAmount;
@@ -100,6 +113,19 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	public CustomerDiary(final Long id) {
 		super(id);
+	}
+
+	public CustomerDiary(Date diaryDate, Customer customer, User salesRep) {
+		this.diaryDate = diaryDate;
+		this.customer = customer;
+		this.salesRep = salesRep;
+		this.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		this.setShiptoCustomerAddress(true);
+		this.setActive(true);
+		this.purpose = CustomerDiaryPurpose.VISTED.name();
+		this.status = CustomerDiaryStatus.DRAFTED.name();
+		this.setTotalAmount(0);
+
 	}
 
 	public String getDescription() {
@@ -150,11 +176,11 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 		this.diaryDate = diaryDate;
 	}
 
-	public String getDocumentNo() {
+	public Long getDocumentNo() {
 		return documentNo;
 	}
 
-	public void setDocumentNo(String documentNo) {
+	public void setDocumentNo(Long documentNo) {
 		this.documentNo = documentNo;
 	}
 

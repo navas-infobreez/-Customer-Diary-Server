@@ -1,33 +1,26 @@
 package com.planet.customer.diary.customer_diary.service.impl;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.planet.customer.diary.customer_diary.entity.Customer;
 import com.planet.customer.diary.customer_diary.entity.CustomerDiary;
 import com.planet.customer.diary.customer_diary.entity.User;
-import com.planet.customer.diary.customer_diary.model.dto.CustomerDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryDTO;
 import com.planet.customer.diary.customer_diary.model.dto.CustomerDiaryLineDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductCategoryDTO;
-import com.planet.customer.diary.customer_diary.model.dto.ProductDTO;
-import com.planet.customer.diary.customer_diary.model.dto.UomDTO;
-import com.planet.customer.diary.customer_diary.model.dto.UserDTO;
-import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.repository.CustomerDiaryRepository;
+import com.planet.customer.diary.customer_diary.repository.GenericRepository;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryLineService;
 import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
-import com.planet.customer.diary.customer_diary.service.CustomerService;
-import com.planet.customer.diary.customer_diary.service.ProductCategoryService;
-import com.planet.customer.diary.customer_diary.service.ProductService;
-import com.planet.customer.diary.customer_diary.service.UomService;
-import com.planet.customer.diary.customer_diary.service.UserService;
 
 @Service(value = "customerDiaryService")
 public class CustomerDiaryServiceImpl extends BasicServiceImpl implements CustomerDiaryService {
@@ -43,15 +36,6 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 	@Autowired
 	private CustomerDiaryLineService customerDiaryLineService;
 
-	@Autowired
-	private CustomerService customerService;
-
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private ProductCategoryService productCategoryService;
-	
 	private List<CustomerDiaryDTO> mapCustomerDiaryEntityToDTO(final List<CustomerDiary> customerDiaryList) {
 		List<CustomerDiaryDTO> tempDTOs = null;
 		if (!customerDiaryList.isEmpty()) {
@@ -63,23 +47,25 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 
 	private CustomerDiaryDTO mapCustomerDiaryEntityToDTO(final CustomerDiary customerDiary) {
 		CustomerDiaryDTO customerDiaryDTO = mapEntityToDTO(customerDiary, CustomerDiaryDTO.class);
-		final List<CustomerDiaryLineDTO> customerDiaryLineDTOList = (List<CustomerDiaryLineDTO>) mapEntitiesToDTOs(
-				customerDiary.getCustomerDiaryLineList(), CustomerDiaryLineDTO.class);
+		final List<CustomerDiaryLineDTO> customerDiaryLineDTOList = customerDiaryLineService
+				.mapCustomerDiaryLineEntityToDTO(customerDiary.getCustomerDiaryLineList());
+		customerDiaryDTO.setSalesRepId(customerDiary.getSalesRep().getId());
+		customerDiaryDTO.setCustomerId(customerDiary.getCustomer().getId());
 		customerDiaryDTO.setCustomerDiaryLineDTOList(customerDiaryLineDTOList);
 		return customerDiaryDTO;
 	}
 
-	private CustomerDiary mapDTOToCustomerDiaryEntity(final CustomerDiaryDTO customerDiaryDTO) {
+	public CustomerDiary mapDTOToCustomerDiaryEntity(final CustomerDiaryDTO customerDiaryDTO) {
 		CustomerDiary customerDiary = null;
 		if (customerDiaryDTO.getId() != null && customerDiaryDTO.getId() > 0) {
 			customerDiary = findById(customerDiaryDTO.getId());
 			customerDiary.setQuotationNo(customerDiaryDTO.getQuotationNo());
 			customerDiary.setActive(customerDiaryDTO.isActive());
 			customerDiary.setDescription(customerDiaryDTO.getDescription());
-			customerDiary.setCreatedDate(customerDiaryDTO.getCreatedDate());
+			customerDiary.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			customerDiary.setDiaryDate(customerDiaryDTO.getDiaryDate());
-			customerDiary.setDocumentNo(customerDiaryDTO.getDocumentNo());
-			//customerDiary.setShiptoCustomerAddress(customerDiaryDTO.getShiptoCustomerAddress);
+			// customerDiary.setDocumentNo(customerDiaryDTO.getDocumentNo());
+			customerDiary.setShiptoCustomerAddress(customerDiaryDTO.isShiptoCustomerAddress());
 			customerDiary.setTotalAmount(customerDiaryDTO.getTotalAmount());
 			customerDiary.setEmail(customerDiaryDTO.getEmail());
 			customerDiary.setCountry(customerDiaryDTO.getCountry());
@@ -92,17 +78,23 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 			customerDiary.setContactNo(customerDiaryDTO.getContactNo());
 			customerDiary.setPurpose(customerDiaryDTO.getPurpose());
 			customerDiary.setStatus(customerDiaryDTO.getStatus());
-			
-			CustomerDTO customerDTO = customerService.findByCustomerId(customerDiaryDTO.getCustomerId());
-			customerDiary.setCustomer(customerService.mapDTOToCustomerEntity(customerDTO));
-			
-			UserDTO userDTO = userService.findByUserId(customerDiaryDTO.getSalesRepId());
-			customerDiary.setSalesRep(userService.mapDTOToUserEntity(userDTO));
-			
+
 		}else {
 			customerDiary = new CustomerDiary();
 			customerDiary = (CustomerDiary) mapDTOToEntity(customerDiaryDTO, customerDiary);
 		}
+		Customer customer = genericRepository.findById(Customer.class, customerDiaryDTO.getCustomerId());
+		if (customer == null)
+			throw new EntityNotFoundException("Customer not found");
+		customerDiary.setCustomer(customer);
+		User salesRep = genericRepository.findById(User.class, customerDiaryDTO.getSalesRepId());
+		if (salesRep == null)
+			throw new EntityNotFoundException("SalesRep not found");
+		customerDiary.setSalesRep(salesRep);
+		Long docNo = customerDiaryRepository.getNextDocumentNo();
+		if (docNo <= 0)
+			throw new EntityNotFoundException("next docno is empty");
+		customerDiary.setDocumentNo(docNo);
 		customerDiary.setCustomerDiaryLineList(
 				customerDiaryLineService.mapCustomerDiaryLineDTOToEntity(customerDiaryDTO.getCustomerDiaryLineDTOList(), customerDiary));
 		return customerDiary;

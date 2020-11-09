@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.IntegerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -43,16 +44,24 @@ public class CustomerDiaryRepositoryImpl implements CustomerDiaryRepository {
 
 	@Override
 	public List<CustomerDiary> findByDocumentNo(String documentno) {
-		final String hql = "from CustomerDiary where lower(document_no) = :documentno";
+		final String hql = "from CustomerDiary where document_no = :documentno";
 		List<CustomerDiary> customerDiaryList = getSession().createQuery(hql).setParameter("documentno", documentno).list();
 		return customerDiaryList;
 	}
 
 	@Override
 	public List<CustomerDiary> findByInvoiceNo(String invoiceno) {
-		final String hql = "from CustomerDiary where lower(invoice_no) = :invoiceno";
-		List<CustomerDiary> customerDiaryList = getSession().createQuery(hql).setParameter("invoiceno", invoiceno).list();
+		final String hql = "from CustomerDiary where invoice_no = :invoiceno";
+		List<CustomerDiary> customerDiaryList = getSession().createQuery(hql).setParameter("invoiceno", invoiceno)
+				.list();
 		return customerDiaryList;
+	}
+
+	public long getNextDocumentNo() {
+		final String hql = "select nextval('tbl_customer_diary_document_no_seq') as docno ";
+		Integer count = (Integer) getSession().createSQLQuery(hql).addScalar("docno", new IntegerType())
+				.uniqueResult();
+		return count != null ? count.longValue() : 0;
 	}
 
 }
