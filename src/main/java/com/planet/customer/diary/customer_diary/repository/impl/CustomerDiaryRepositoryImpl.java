@@ -58,7 +58,7 @@ public class CustomerDiaryRepositoryImpl implements CustomerDiaryRepository {
 	}
 
 	public long getNextDocumentNo() {
-		final String hql = "select nextval('tbl_customer_diary_document_number_seq') as docno ";
+		final String hql = "select nextval('tbl_customer_diary_document_no_seq') as docno ";
 		Integer count = (Integer) getSession().createSQLQuery(hql).addScalar("docno", new IntegerType())
 				.uniqueResult();
 		return count != null ? count.longValue() : 0;
