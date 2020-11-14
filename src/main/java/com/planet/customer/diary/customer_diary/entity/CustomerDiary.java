@@ -25,21 +25,20 @@ import com.planet.customer.diary.customer_diary.model.constants.CustomerDiaryPur
 import com.planet.customer.diary.customer_diary.model.constants.CustomerDiaryStatus;
 
 @Entity
-@Table(name = "TBL_CUSTOMER_DIARY",
-		uniqueConstraints = @UniqueConstraint(name = "unique_Diary", columnNames = "DOCUMENT_NO"))
+@Table(name = "TBL_CUSTOMER_DIARY", uniqueConstraints = @UniqueConstraint(name = "unique_Diary", columnNames = "DOCUMENT_NO"))
 public class CustomerDiary extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -5627410044823351383L;
 
 	@Column(name = "INVOICE_NO", unique = true)
 	private String invoiceNo;
-	
+
 	@Column(name = "QUOTATION_NO", unique = true)
 	private String quotationNo;
-		
+
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
+
 	@Column(name = "ACTIVE")
 	private boolean active;
 
@@ -58,7 +57,7 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	@Column(name = "DIARY_DATE")
 	private Date diaryDate;
-	
+
 	@SequenceGenerator(name = "pk_sequence", sequenceName = "document_number_seq", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pk_sequence")
 	@Column(name = "DOCUMENT_NO", updatable = false, columnDefinition = "serial")
@@ -66,7 +65,6 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	@Column(name = "SHIP_CMR_ADDRS")
 	private boolean shiptoCustomerAddress;
-
 
 	@Column(name = "totalAmount")
 	private double totalAmount;
@@ -97,7 +95,7 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	@Column(name = "CONTACT_NO")
 	private String contactNo;
-	
+
 	@Column(name = "PURPOSE")
 	private String purpose;
 
@@ -106,7 +104,7 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	@OneToMany(mappedBy = "customerDiary", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CustomerDiaryLine> customerDiaryLineList;
-	
+
 	public CustomerDiary() {
 
 	}
@@ -309,7 +307,14 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 	}
 
 	public void setCustomerDiaryLineList(List<CustomerDiaryLine> customerDiaryLineList) {
-		this.customerDiaryLineList = customerDiaryLineList;
+		if (customerDiaryLineList != null) {
+			if (this.customerDiaryLineList != null) {
+				this.customerDiaryLineList.clear();
+				this.customerDiaryLineList.addAll(customerDiaryLineList);
+			} else {
+				this.customerDiaryLineList = (customerDiaryLineList);
+			}
+		}
 	}
 
 	@Override
@@ -323,9 +328,9 @@ public class CustomerDiary extends BaseEntity implements Serializable {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if(obj == null)
+		if (obj == null)
 			return false;
-		
+
 		if (this == obj) {
 			return true;
 		}
