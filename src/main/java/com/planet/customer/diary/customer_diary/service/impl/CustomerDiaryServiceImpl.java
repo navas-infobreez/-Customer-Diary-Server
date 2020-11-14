@@ -24,7 +24,7 @@ import com.planet.customer.diary.customer_diary.service.CustomerDiaryService;
 
 @Service(value = "customerDiaryService")
 public class CustomerDiaryServiceImpl extends BasicServiceImpl implements CustomerDiaryService {
-		
+
 	@Autowired
 	@Qualifier("genericRepository")
 	private GenericRepository genericRepository;
@@ -39,8 +39,7 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 	private List<CustomerDiaryDTO> mapCustomerDiaryEntityToDTO(final List<CustomerDiary> customerDiaryList) {
 		List<CustomerDiaryDTO> tempDTOs = null;
 		if (!customerDiaryList.isEmpty()) {
-			tempDTOs = customerDiaryList.stream().map(this::mapCustomerDiaryEntityToDTO)
-					.collect(Collectors.toList());
+			tempDTOs = customerDiaryList.stream().map(this::mapCustomerDiaryEntityToDTO).collect(Collectors.toList());
 		}
 		return tempDTOs;
 	}
@@ -79,7 +78,7 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 			customerDiary.setPurpose(customerDiaryDTO.getPurpose());
 			customerDiary.setStatus(customerDiaryDTO.getStatus());
 
-		}else {
+		} else {
 			customerDiary = new CustomerDiary();
 			customerDiary = (CustomerDiary) mapDTOToEntity(customerDiaryDTO, customerDiary);
 		}
@@ -91,12 +90,15 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 		if (salesRep == null)
 			throw new EntityNotFoundException("SalesRep not found");
 		customerDiary.setSalesRep(salesRep);
-		Long docNo = customerDiaryRepository.getNextDocumentNo();
+
+		Long docNo = (customerDiary.getDocumentNo() != null && customerDiary.getDocumentNo() > 0)
+				? customerDiary.getDocumentNo()
+				: customerDiaryRepository.getNextDocumentNo();
 		if (docNo <= 0)
 			throw new EntityNotFoundException("next docno is empty");
 		customerDiary.setDocumentNo(docNo);
-		customerDiary.setCustomerDiaryLineList(
-				customerDiaryLineService.mapCustomerDiaryLineDTOToEntity(customerDiaryDTO.getCustomerDiaryLineDTOList(), customerDiary));
+		customerDiary.setCustomerDiaryLineList(customerDiaryLineService
+				.mapCustomerDiaryLineDTOToEntity(customerDiaryDTO.getCustomerDiaryLineDTOList(), customerDiary));
 		return customerDiary;
 	}
 
@@ -120,7 +122,6 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 		}
 	}
 
-	
 	@Override
 	@Transactional(readOnly = true)
 	public CustomerDiaryDTO findByCustomerDiaryId(Long id) {
@@ -135,10 +136,10 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 			throw new NullPointerException("No data found user role information");
 		if (customerDiaryDTO.getId() != null && customerDiaryDTO.getId() > 0) {
 			genericRepository.saveOrUpdate(mapDTOToCustomerDiaryEntity(customerDiaryDTO));
-		}else {
+		} else {
 			final Serializable userId = genericRepository.save(mapDTOToCustomerDiaryEntity(customerDiaryDTO));
 			customerDiaryDTO.setId((Long) userId);
-		}					
+		}
 		return mapCustomerDiaryEntityToDTO(findById(customerDiaryDTO.getId()));
 	}
 
@@ -151,28 +152,28 @@ public class CustomerDiaryServiceImpl extends BasicServiceImpl implements Custom
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<CustomerDiaryDTO> findBySalesRepId(Long salesrepId){
+	public List<CustomerDiaryDTO> findBySalesRepId(Long salesrepId) {
 		final List<CustomerDiary> customerDiary = customerDiaryRepository.findBySalesRepId(salesrepId);
 		return mapCustomerDiaryEntityToDTO(customerDiary);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<CustomerDiaryDTO> findByCustomerId(Long customerId){
+	public List<CustomerDiaryDTO> findByCustomerId(Long customerId) {
 		final List<CustomerDiary> customerDiary = customerDiaryRepository.findByCustomerId(customerId);
 		return mapCustomerDiaryEntityToDTO(customerDiary);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
-	public List<CustomerDiaryDTO> findByDocumentNo(String documentno){
+	public List<CustomerDiaryDTO> findByDocumentNo(String documentno) {
 		final List<CustomerDiary> customerDiary = customerDiaryRepository.findByDocumentNo(documentno);
 		return mapCustomerDiaryEntityToDTO(customerDiary);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<CustomerDiaryDTO> findByInvoiceNo(String invoiceno){
+	public List<CustomerDiaryDTO> findByInvoiceNo(String invoiceno) {
 		final List<CustomerDiary> customerDiary = customerDiaryRepository.findByInvoiceNo(invoiceno);
 		return mapCustomerDiaryEntityToDTO(customerDiary);
 	}
