@@ -1,18 +1,20 @@
 package com.planet.customer.diary.customer_diary.domain;
 
+import com.planet.customer.diary.customer_diary.model.dto.UserDTO;
+
 public class AuthToken {
 
 	private String token;
 
-	private String username;
+	private UserDTO user;
 
 	public AuthToken() {
 
 	}
 
-	public AuthToken(final String token, final String username) {
+	public AuthToken(final String token, final UserDTO user) {
 		this.token = token;
-		this.username = username;
+		this.user = user;
 	}
 
 	public AuthToken(final String token) {
@@ -27,12 +29,12 @@ public class AuthToken {
 		this.token = token;
 	}
 
-	public String getUsername() {
-		return username;
+	public UserDTO getUser() {
+		return user;
 	}
 
-	public void setUsername(final String username) {
-		this.username = username;
+	public void setUser(UserDTO user) {
+		this.user = user;
 	}
 
 }

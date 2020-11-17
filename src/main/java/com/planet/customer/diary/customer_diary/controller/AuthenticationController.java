@@ -35,14 +35,14 @@ public class AuthenticationController {
 	public ResponseDTO<AuthToken> register(@RequestBody final LoginUser loginUser) {
 		authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword()));
-		
+
 		final UserDTO user = userService.findByUserName(loginUser.getUsername());
 		final String token = jwtTokenUtil.generateToken(user);
-		return new ResponseDTO<>(200, "Success", new AuthToken(token, user.getUserName()));
+		return new ResponseDTO<>(200, "Success", new AuthToken(token, user));
 	}
-	
+
 	@GetMapping(value = "/greeting")
-	public String getGreeting(){
+	public String getGreeting() {
 		return "Hello World!";
 	}
 
