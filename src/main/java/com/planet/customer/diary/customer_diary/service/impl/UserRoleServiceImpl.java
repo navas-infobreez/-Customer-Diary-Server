@@ -18,14 +18,14 @@ import com.planet.customer.diary.customer_diary.service.UserRoleService;
 
 @Service(value = "userRoleService")
 public class UserRoleServiceImpl extends BasicServiceImpl implements UserRoleService {
-		
+
 	@Autowired
 	@Qualifier("genericRepository")
 	private GenericRepository genericRepository;
-				
+
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	private List<UserRoleDTO> mapUserEntitiesToDTOs(final List<UserRole> usersRoleList) {
 		List<UserRoleDTO> userRoleDTOs = new ArrayList<>();
 		if (!usersRoleList.isEmpty()) {
@@ -36,23 +36,23 @@ public class UserRoleServiceImpl extends BasicServiceImpl implements UserRoleSer
 
 	private UserRoleDTO mapUserEntityToDTO(final UserRole userRole) {
 		UserRoleDTO tempUserRoleDTO = new UserRoleDTO();
-		if (userRole != null) 
-			tempUserRoleDTO = modelMapper.map(userRole, tempUserRoleDTO.getClass());			
+		if (userRole != null)
+			tempUserRoleDTO = modelMapper.map(userRole, tempUserRoleDTO.getClass());
 		return tempUserRoleDTO;
 	}
 
 	private UserRole mapDTOToUserEntity(final UserRoleDTO userRoleDTO) {
-		UserRole userRole = null;	
-		if(userRoleDTO.getId() != null && userRoleDTO.getId() > 0) {
+		UserRole userRole = null;
+		if (userRoleDTO.getId() != null && userRoleDTO.getId() > 0) {
 			userRole = findById(userRoleDTO.getId());
 			userRole.setActive(userRoleDTO.getActive());
 			userRole.setDescription(userRoleDTO.getDescription());
-			userRole.setName(userRoleDTO.getName());
 			userRole.setPriority(userRoleDTO.getPriority());
-		}else {
+		} else {
 			userRole = new UserRole();
 			userRole = (UserRole) mapDTOToEntity(userRoleDTO, userRole);
-		}						
+		}
+		userRole.setName(userRoleDTO.getName().toUpperCase());
 		return userRole;
 	}
 
@@ -76,26 +76,25 @@ public class UserRoleServiceImpl extends BasicServiceImpl implements UserRoleSer
 		}
 	}
 
-	
 	@Override
 	@Transactional(readOnly = true)
 	public UserRoleDTO findByRoleId(final Long id) {
-		final UserRole userRole =  findById(id);
+		final UserRole userRole = findById(id);
 		return mapUserEntityToDTO(userRole);
 	}
 
 	@Override
 	@Transactional
 	public UserRoleDTO createOrUpdateUserRole(UserRoleDTO userRole) {
-		if(userRole == null)
+		if (userRole == null)
 			throw new NullPointerException("No data found user role information");
-		if(userRole.getId() != null && userRole.getId() > 0) {
+		if (userRole.getId() != null && userRole.getId() > 0) {
 			genericRepository.saveOrUpdate(mapDTOToUserEntity(userRole));
-		}else {
+		} else {
 			final Serializable userId = genericRepository.save(mapDTOToUserEntity(userRole));
 			userRole.setId((Long) userId);
-		}					
+		}
 		return userRole;
 	}
-	
+
 }
