@@ -15,14 +15,14 @@ import javax.persistence.Table;
 public class User extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -8809120863140120174L;
-	
+
 	@Column(name = "FIRST_NAME")
 	private String firstName;
 
 	@Column(name = "LAST_NAME")
 	private String lastName;
 
-	@Column(name = "USER_NAME")
+	@Column(name = "USER_NAME", unique = true)
 	private String userName;
 
 	@Column(name = "PASSWORD")
@@ -34,7 +34,7 @@ public class User extends BaseEntity implements Serializable {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserRoleMap> userRoleMaps;
 
-	public User(final String firstName, final String lastName,final String userName) {
+	public User(final String firstName, final String lastName, final String userName) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -89,7 +89,7 @@ public class User extends BaseEntity implements Serializable {
 	}
 
 	public void setUserRoleMaps(final List<UserRoleMap> userRoleMaps) {
-	  if (userRoleMaps != null) {
+		if (userRoleMaps != null) {
 			if (this.userRoleMaps != null) {
 				this.userRoleMaps.clear();
 				this.userRoleMaps.addAll(userRoleMaps);
@@ -97,7 +97,7 @@ public class User extends BaseEntity implements Serializable {
 				this.userRoleMaps = userRoleMaps;
 			}
 
-		 }
+		}
 	}
 
 	@Override
@@ -143,7 +143,7 @@ public class User extends BaseEntity implements Serializable {
 		} else if (!lastName.equals(other.lastName)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

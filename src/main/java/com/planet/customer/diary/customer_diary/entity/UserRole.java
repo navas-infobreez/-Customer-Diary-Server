@@ -15,7 +15,7 @@ public class UserRole extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -6094612306372604302L;
 
-	@Column(name = "NAME")
+	@Column(name = "NAME", unique = true)
 	private String name;
 
 	@Column(name = "DESCRIPTION")
@@ -26,7 +26,7 @@ public class UserRole extends BaseEntity implements Serializable {
 
 	@Column(name = "ACTIVE")
 	private Boolean active;
-	
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<UserRoleMap> userRoleMaps;
 
@@ -85,6 +85,7 @@ public class UserRole extends BaseEntity implements Serializable {
 	public void setUserRoleMaps(final List<UserRoleMap> userRoleMaps) {
 		this.userRoleMaps = userRoleMaps;
 	}
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();

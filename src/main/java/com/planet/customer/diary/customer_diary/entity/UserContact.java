@@ -11,8 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "TBL_USER_CONTACT",
-uniqueConstraints = @UniqueConstraint(name = "unique_user_contact", columnNames = "USER_ID"))
+@Table(name = "TBL_USER_CONTACT", uniqueConstraints = @UniqueConstraint(name = "unique_user_contact", columnNames = "USER_ID"))
 public class UserContact extends BaseEntity implements Serializable {
 
 	private static final long serialVersionUID = -410289978826615196L;
@@ -24,21 +23,20 @@ public class UserContact extends BaseEntity implements Serializable {
 	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name = "PHONE_NUMBER")
+	@Column(name = "PHONE_NUMBER", unique = true)
 	private Long phoneNumber;
-	
+
 	@Column(name = "COUNTRY")
 	private String country;
-	
+
 	@Column(name = "CITY")
 	private String city;
-	
+
 	@Column(name = "ADDRESS1")
 	private String address1;
-	
+
 	@Column(name = "ADDRESS2")
 	private String address2;
-	
 
 	public UserContact() {
 
