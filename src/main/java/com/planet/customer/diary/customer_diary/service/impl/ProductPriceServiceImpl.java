@@ -28,9 +28,9 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 	@Override
 	public List<ProductPrice> mapProductPriceDTOToEntity(final List<ProductPriceDTO> productPriceDTOList,
 			final Product product) {
-		List<ProductPrice> tempProductPriceList  = null;
-		if(productPriceDTOList == null) {
-			if(product.getId() != null && product.getId() > 0) {
+		List<ProductPrice> tempProductPriceList = null;
+		if (productPriceDTOList == null) {
+			if (product.getId() != null && product.getId() > 0) {
 				tempProductPriceList = productPriceRepository.findByProductId(product.getId());
 			}
 			return tempProductPriceList;
@@ -49,6 +49,10 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 			if (productPriceprice.getProduct() == null) {
 				productPriceprice.setProduct(product);
 			}
+			if ((productPriceprice.getId() == null || productPriceprice.getId() == 0)
+					&& productPriceprice.getProduct() != null) {
+				genericRepository.save(productPriceprice);
+			}
 			tempProductPriceList.add(productPriceprice);
 		}
 		return tempProductPriceList;
@@ -59,11 +63,11 @@ public class ProductPriceServiceImpl extends BasicServiceImpl implements Product
 		final List<ProductPrice> productPriceList = productPriceRepository.findByProductId(id);
 		return mapProductPriceEntityToDTO(productPriceList);
 	}
-	
+
 	private ProductPrice findById(final Long id) {
 		return genericRepository.findById(ProductPrice.class, id);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private List<ProductPriceDTO> mapProductPriceEntityToDTO(final List<ProductPrice> ProductPriceList) {
 		return (List<ProductPriceDTO>) mapEntitiesToDTOs(ProductPriceList, ProductPriceDTO.class);

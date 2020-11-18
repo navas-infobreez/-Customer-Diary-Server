@@ -32,18 +32,19 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 	private CustomerDiaryLineRepository customerDiaryLineRepository;
 
 	@Override
-	public List<CustomerDiaryLine> mapCustomerDiaryLineDTOToEntity(final List<CustomerDiaryLineDTO> customerDiaryLineDTOList,
-			final CustomerDiary customerDiary) {
-		List<CustomerDiaryLine> tempCustomerDiaryLineList  = null;
-		if(customerDiaryLineDTOList == null) {
-			if(customerDiary.getId() != null && customerDiary.getId() > 0) {
+	public List<CustomerDiaryLine> mapCustomerDiaryLineDTOToEntity(
+			final List<CustomerDiaryLineDTO> customerDiaryLineDTOList, final CustomerDiary customerDiary) {
+		List<CustomerDiaryLine> tempCustomerDiaryLineList = null;
+		if (customerDiaryLineDTOList == null) {
+			if (customerDiary.getId() != null && customerDiary.getId() > 0) {
 				tempCustomerDiaryLineList = customerDiaryLineRepository.findByCustomerDiaryId(customerDiary.getId());
 			}
 			return tempCustomerDiaryLineList;
 		}
 		tempCustomerDiaryLineList = new ArrayList<>();
 		for (final CustomerDiaryLineDTO customerDiaryLineDTO : customerDiaryLineDTOList) {
-			CustomerDiaryLine customerDiaryLine = !customerDiaryLineDTO.isEmpty() ? findById(customerDiaryLineDTO.getId())
+			CustomerDiaryLine customerDiaryLine = !customerDiaryLineDTO.isEmpty()
+					? findById(customerDiaryLineDTO.getId())
 					: new CustomerDiaryLine();
 			customerDiaryLine.setSalesPrice(customerDiaryLineDTO.getSalesPrice());
 			customerDiaryLine.setQty(customerDiaryLineDTO.getQty());
@@ -62,9 +63,13 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 				throw new EntityNotFoundException(
 						"ProductCategory" + customerDiaryLineDTO.getProductCategoryId() + " not found");
 			customerDiaryLine.setProductCategory(productCategory);
-			
+
 			if (customerDiaryLine.getCustomerDiary() == null) {
 				customerDiaryLine.setCustomerDiary(customerDiary);
+			}
+			if ((customerDiaryLine.getId() == null || customerDiaryLine.getId() == 0)
+					&& customerDiaryLine.getCustomerDiary() != null) {
+				genericRepository.save(customerDiaryLine);
 			}
 			tempCustomerDiaryLineList.add(customerDiaryLine);
 		}
@@ -74,7 +79,7 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 	private CustomerDiaryLine findById(final Long id) {
 		return genericRepository.findById(CustomerDiaryLine.class, id);
 	}
-	
+
 	public List<CustomerDiaryLineDTO> mapCustomerDiaryLineEntityToDTO(
 			final List<CustomerDiaryLine> customerDiaryLineList) {
 		List<CustomerDiaryLineDTO> tempDTOs = null;
@@ -99,7 +104,7 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 		final List<CustomerDiaryLine> customerDiaryLineList = customerDiaryLineRepository.findByCustomerDiaryId(id);
 		return mapCustomerDiaryLineEntityToDTO(customerDiaryLineList);
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<CustomerDiaryLineDTO> findByProductId(Long productId) {
@@ -110,7 +115,8 @@ public class CustomerDiaryLineServiceImpl extends BasicServiceImpl implements Cu
 	@Override
 	@Transactional(readOnly = true)
 	public List<CustomerDiaryLineDTO> findByProductCategoryId(Long productCategoryId) {
-		final List<CustomerDiaryLine> customerDiaryLineList = customerDiaryLineRepository.findByProductCategoryId(productCategoryId);
+		final List<CustomerDiaryLine> customerDiaryLineList = customerDiaryLineRepository
+				.findByProductCategoryId(productCategoryId);
 		return mapCustomerDiaryLineEntityToDTO(customerDiaryLineList);
 	}
 

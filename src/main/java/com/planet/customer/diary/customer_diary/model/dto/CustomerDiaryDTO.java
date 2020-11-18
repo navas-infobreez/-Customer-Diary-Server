@@ -11,27 +11,27 @@ public class CustomerDiaryDTO extends BaseDTO {
 	private String quotationNo;
 
 	private String description;
-	
+
 	private boolean active;
-	
+
 	private Timestamp createdDate;
 
 	private Date diaryDate;
 
 	private Long documentNo;
-	
+
 	private boolean shiptoCustomerAddress;
 
 	private Long customerId;
 
 	private Long salesRepId;
-	
+
 	private double totalAmount;
 
 	private String email;
-	
+
 	private String country;
-	
+
 	private String city;
 
 	private String state;
@@ -41,7 +41,7 @@ public class CustomerDiaryDTO extends BaseDTO {
 	private String pinNo;
 
 	private String address1;
-	
+
 	private String address2;
 
 	private String contactNo;
@@ -49,8 +49,8 @@ public class CustomerDiaryDTO extends BaseDTO {
 	private String purpose;
 
 	private String status;
-	
-	private List<CustomerDiaryLineDTO> CustomerDiaryLineDTOList;
+
+	private List<CustomerDiaryLineDTO> customerDiaryLineDTOList;
 
 	public CustomerDiaryDTO(final Long id, final Long documentNo, final Long customerId, final Long salesRepId) {
 		super(id);
@@ -61,7 +61,7 @@ public class CustomerDiaryDTO extends BaseDTO {
 
 	public CustomerDiaryDTO() {
 	}
-	
+
 	public String getInvoiceNo() {
 		return invoiceNo;
 	}
@@ -239,18 +239,18 @@ public class CustomerDiaryDTO extends BaseDTO {
 	}
 
 	public List<CustomerDiaryLineDTO> getCustomerDiaryLineDTOList() {
-		return CustomerDiaryLineDTOList;
+		return customerDiaryLineDTOList;
 	}
 
 	public void setCustomerDiaryLineDTOList(List<CustomerDiaryLineDTO> customerDiaryLineDTOList) {
-		CustomerDiaryLineDTOList = customerDiaryLineDTOList;
+		this.customerDiaryLineDTOList = customerDiaryLineDTOList;
 	}
 
 	@Override
 	public String toString() {
-		return "ProductDTO [DocumentNo="+documentNo+", customerId=" + customerId+ ", salesRepId=" + salesRepId
-				+ ", Description=" + description + ", Active="+ active + ", CustomerDiaryLineDTOList=" + CustomerDiaryLineDTOList + "]";
+		return "ProductDTO [DocumentNo=" + documentNo + ", customerId=" + customerId + ", salesRepId=" + salesRepId
+				+ ", Description=" + description + ", Active=" + active + ", CustomerDiaryLineDTOList="
+				+ customerDiaryLineDTOList + "]";
 	}
-
 
 }

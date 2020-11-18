@@ -15,12 +15,12 @@ import javax.persistence.UniqueConstraint;
 		"PRODUCT_ID", "UOM_ID", "CUSTOMER_DIARY_ID" }))
 public class CustomerDiaryLine extends BaseEntity implements Serializable {
 
-	private static final long serialVersionUID = 7117271549414306018L;
+	private static final long serialVersionUID = 7125010438839801782L;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "CUSTOMER_DIARY_ID", nullable = false)
 	private CustomerDiary customerDiary;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "PRODUCT_ID", nullable = false)
 	private Product product;
@@ -42,10 +42,8 @@ public class CustomerDiaryLine extends BaseEntity implements Serializable {
 	@Column(name = "DESCRIPTION")
 	private String description;
 
-
 	public CustomerDiaryLine() {
 	}
-
 
 	public UOM getUom() {
 		return uom;
@@ -54,7 +52,6 @@ public class CustomerDiaryLine extends BaseEntity implements Serializable {
 	public void setUom(UOM uom) {
 		this.uom = uom;
 	}
-
 
 	public double getSalesPrice() {
 		return salesPrice;
@@ -123,8 +120,7 @@ public class CustomerDiaryLine extends BaseEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "CustomerDiaryLine [Product=" + product.getName() + ", UOM=" + uom.getName() + ", SalesPrice="
-				+ salesPrice + ", id"
-				+ super.getId() + "]";
+				+ salesPrice + ", id" + super.getId() + "]";
 	}
 
 }
